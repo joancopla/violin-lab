@@ -353,6 +353,7 @@ dialog .row-btns { justify-content: flex-end; }
     <button class="card mod" data-start="m2"><b>Nota → diapasó</b><span>Veus una nota i una corda, i hi poses el dit.</span><em>Exercici</em></button>
     <button class="card mod" data-start="m3"><b>Partitura → nota</b><span>Llegeixes una nota en clau de sol i dius el nom.</span><em>Exercici</em></button>
     <button class="card mod" data-start="m4"><b>Partitura → diapasó</b><span>Llegeixes una nota i la toques a l'altura exacta.</span><em>Exercici</em></button>
+    <button class="card mod" data-start="m5"><b>Digitació</b><span>Veus una nota i una corda, i dius quin dit hi va.</span><em>Exercici</em></button>
     <button class="card mod" data-go="free"><b>Toca lliure</b><span>Toques on vulguis i veus la nota, el dit i la partitura.</span><em>Eina</em></button>
   </section>
 
@@ -478,7 +479,8 @@ const DIGITS = [
   { id: '1a', label: '1a posició completa', book: 'Stradivari 3', slots: [0, 1, 2, 3, 4, 5, 6, 7] },
 ];
 const PELLS = { a: 'Fusta i paper', b: 'Escenari', c: 'Pop' };
-const MODS = { m1: 'Diapasó → nota', m2: 'Nota → diapasó', m3: 'Partitura → nota', m4: 'Partitura → diapasó' };
+const MODS = { m1: 'Diapasó → nota', m2: 'Nota → diapasó', m3: 'Partitura → nota', m4: 'Partitura → diapasó', m5: 'Digitació' };
+const FINGER_LABEL = ['0', '1 baix', '1', '2 baix', '2 alt', '3', '3 alt', '4'];
 
 function spell(midi, slot) {
   const en = (SLOTS[slot].spelling === 'flat' ? PC_FLAT : PC_SHARP)[pcOf(midi)];
@@ -755,7 +757,7 @@ function renderFreeCard() {
    Sessió d'exercici amb pesos
    ===================================================================== */
 let S = null, nextTimer = null;
-const W_MIN = 0.3, W_MAX = 8, FAST_MS = { m1: 2500, m2: 3500, m3: 3000, m4: 4000 };
+const W_MIN = 0.3, W_MAX = 8, FAST_MS = { m1: 2500, m2: 3500, m3: 3000, m4: 4000, m5: 3000 };
 const BY_PITCH = mod => mod === 'm3' || mod === 'm4'; // mòduls de partitura: la pregunta és una altura, no una posició
 
 // Ítems que poden sortir. Als mòduls de partitura, una sola entrada per altura
@@ -818,7 +820,14 @@ function nextQ() {
     return;
   }
   board.q = null; drawDots(); placeQ();
-  if (S.mod === 'm2') {
+  if (S.mod === 'm5') {
+    // La corda sempre; la nota, a vegades pel nom i a vegades al pentagrama
+    $('#ask').textContent = 'Quin dit hi poses?';
+    $('#target').innerHTML = Math.random() < 0.5
+      ? `Corda ${sname}: <span>${nm(S.q.w, nota)}</span>`
+      : `Corda ${sname}<div class="qstaff" style="margin-top:8px">${staffSvg(it.midi, it.slot)}</div>`;
+    $('#answers').innerHTML = activeSlots().map(sl => `<button class="ans" data-finger="${sl}">${FINGER_LABEL[sl]}</button>`).join('');
+  } else if (S.mod === 'm2') {
     $('#ask').textContent = 'On poses el dit?';
     $('#target').innerHTML = `Corda ${sname}: <span>${nm(S.q.w, nota)}</span>`;
     $('#answers').innerHTML = '';
@@ -852,6 +861,20 @@ function answerName(en) {
     drawDots();
   }
   judge(ok, ok ? '' : `És ${nm(q.w, q.nota)}.`);
+}
+
+// Mòdul 5: resposta amb el dit
+function answerFinger(slot) {
+  const q = S.q; if (!q || q.done) return;
+  const ok = slot === q.slot;
+  document.querySelectorAll('#answers .ans').forEach(b => {
+    b.disabled = true;
+    if (+b.dataset.finger === q.slot) b.classList.add('ok');
+    else if (+b.dataset.finger === slot) b.classList.add('err');
+  });
+  board.dots = [{ s: q.s, slot: q.slot, cls: ok ? 'ok' : SLOTS[q.slot].type, anim: 'pop', nota: q.nota }];
+  drawDots();
+  judge(ok, q.slot === 0 ? "És la corda a l'aire." : `Va ${fingerPhrase(q.slot)}.`);
 }
 
 // Mòduls 2 i 4: resposta tocant el diapasó
@@ -984,6 +1007,7 @@ document.addEventListener('click', e => {
     return;
   }
   const ans = t.closest('[data-ans]'); if (ans) { answerName(ans.dataset.ans); return; }
+  const fg = t.closest('[data-finger]'); if (fg) { answerFinger(+fg.dataset.finger); return; }
   const st = t.closest('[data-start]'); if (st) { startSession(st.dataset.start); return; }
   const go = t.closest('[data-go]'); if (go) { show(go.dataset.go); return; }
   if (t.closest('#nextBtn')) { nextQ(); return; }
