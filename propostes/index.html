@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Violin Lab · Propostes de disseny</title>
+<style>
+/* =====================================================================
+   Tokens comuns
+   ===================================================================== */
+:root {
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- A. Fusta i paper: una llibreta de música ---------- */
+body[data-tema="a"] {
+  color-scheme: light;
+  --bg: #f4ecdd; --bg-2: #eadcc3; --ink: #1f2a44; --muted: #6d6556; --faint: #9a917f;
+  --card: #fffaf0; --card-top: #fffdf7; --line: #e2d4b8; --bw: 1px;
+  --accent: #a6532a; --accent-ink: #fff8ec; --accent-soft: rgba(166,83,42,.12);
+  --ok: #4f7d2b; --err: #b23a2e;
+  --font-head: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --head-weight: 700; --head-track: -.01em;
+  --radius: 14px; --radius-sm: 10px;
+  --shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 12px 26px -16px rgba(90,60,25,.45);
+  --board-1: #33281f; --board-2: #17120e; --board-edge: #0e0b08;
+  --string: #d8ccb6; --nut: #efe2c8; --tape: rgba(255,246,224,.9); --slot-line: rgba(255,240,215,.10);
+  --fnum: #6d6556; --fnum-on: #1f2a44;
+  --staff-line: #4a4538; --staff-ink: #1f2a44; --staff-bg: #fffaf0;
+  --d-open: #b23a2e; --d-norm: #5f8f2e; --d-low1: #d98aa6; --d-low2: #2f7fb8; --d-high3: #e08a1e; --d-text: #fffaf0;
+  --dot-stroke: rgba(0,0,0,.25); --dot-stroke-w: 1;
+  --chip-bg: #fffaf0; --chip-on: #1f2a44; --chip-on-ink: #fff8ec;
+}
+body[data-tema="a"] {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(255,255,255,.7), transparent 70%),
+    radial-gradient(800px 600px at 110% 110%, rgba(166,83,42,.10), transparent 70%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+}
+
+/* ---------- B. Escenari: un concert amb focus ---------- */
+body[data-tema="b"] {
+  color-scheme: dark;
+  --bg: #0b0818; --bg-2: #150f2b; --ink: #f5f1ff; --muted: #a99fcc; --faint: #6e6594;
+  --card: #1a1434; --card-top: #231b45; --line: #2f2658; --bw: 1px;
+  --accent: #ff7a59; --accent-ink: #1a0f0a; --accent-soft: rgba(255,122,89,.14);
+  --ok: #4fd1b5; --err: #ff6b6b;
+  --font-head: "Avenir Next", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --head-weight: 800; --head-track: -.02em;
+  --radius: 20px; --radius-sm: 14px;
+  --shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 20px 40px -18px rgba(0,0,0,.8);
+  --board-1: #1d1713; --board-2: #0b0908; --board-edge: #000;
+  --string: #d9deea; --nut: #efe3cb; --tape: rgba(242,193,78,.6); --slot-line: rgba(255,255,255,.06);
+  --fnum: #8a80b0; --fnum-on: #f2c14e;
+  --staff-line: #8b82b1; --staff-ink: #f5f1ff; --staff-bg: #1a1434;
+  --d-open: #ff5a5f; --d-norm: #6fdc8c; --d-low1: #ff9ecf; --d-low2: #5ab8ff; --d-high3: #ffb547; --d-text: #140f26;
+  --dot-stroke: rgba(255,255,255,.35); --dot-stroke-w: 1;
+  --chip-bg: #1a1434; --chip-on: #f2c14e; --chip-on-ink: #1a1206;
+}
+body[data-tema="b"] {
+  background:
+    radial-gradient(520px 420px at 50% -8%, rgba(242,193,78,.22), transparent 70%),
+    radial-gradient(600px 520px at 100% 30%, rgba(255,122,89,.10), transparent 70%),
+    radial-gradient(600px 520px at 0% 80%, rgba(79,209,181,.08), transparent 70%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+}
+
+/* ---------- C. Pop: viu, arrodonit i amb contorns ---------- */
+body[data-tema="c"] {
+  color-scheme: light;
+  --bg: #fff3e4; --bg-2: #ffe9d2; --ink: #1b1740; --muted: #57527d; --faint: #8b86ad;
+  --card: #ffffff; --card-top: #ffffff; --line: #1b1740; --bw: 2.5px;
+  --accent: #7c5cff; --accent-ink: #ffffff; --accent-soft: rgba(124,92,255,.14);
+  --ok: #17a34a; --err: #e5383b;
+  --font-head: "Arial Rounded MT Bold", "Nunito", "Varela Round", "Segoe UI", system-ui, sans-serif;
+  --head-weight: 800; --head-track: -.01em;
+  --radius: 22px; --radius-sm: 16px;
+  --shadow: 4px 4px 0 #1b1740;
+  --board-1: #2f2870; --board-2: #221c55; --board-edge: #1b1740;
+  --string: #f3f0ff; --nut: #ffd84d; --tape: rgba(255,216,77,.7); --slot-line: rgba(255,255,255,.12);
+  --fnum: #57527d; --fnum-on: #7c5cff;
+  --staff-line: #1b1740; --staff-ink: #1b1740; --staff-bg: #ffffff;
+  --d-open: #ff4d4d; --d-norm: #2ecc71; --d-low1: #ff8fc8; --d-low2: #3d9bff; --d-high3: #ffa62b; --d-text: #1b1740;
+  --dot-stroke: #1b1740; --dot-stroke-w: 2.5;
+  --chip-bg: #ffffff; --chip-on: #7c5cff; --chip-on-ink: #ffffff;
+}
+body[data-tema="c"] {
+  background:
+    radial-gradient(420px 420px at 8% 8%, rgba(124,92,255,.22), transparent 70%),
+    radial-gradient(460px 460px at 96% 92%, rgba(255,138,61,.25), transparent 70%),
+    radial-gradient(360px 360px at 92% 12%, rgba(46,204,113,.16), transparent 70%),
+    var(--bg);
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; font-family: var(--font-body); color: var(--ink);
+  background-attachment: fixed; line-height: 1.45;
+  transition: background-color .3s;
+}
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px 48px; }
+h1, h2, h3 { font-family: var(--font-head); font-weight: var(--head-weight); letter-spacing: var(--head-track); margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 44px); line-height: 1.08; }
+h2 { font-size: 22px; line-height: 1.2; }
+h3 { font-size: 17px; }
+.muted { color: var(--muted); }
+
+.card {
+  background: linear-gradient(180deg, var(--card-top), var(--card));
+  border: var(--bw) solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 18px;
+}
+
+/* ---------- Selector de tema (A/B/C): es manté a l'app com a utilitat ---------- */
+.picker {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; align-items: center;
+  padding: 10px 12px; background: rgba(20,20,30,.82); color: #fff;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  font-family: system-ui, sans-serif; font-size: 14px;
+}
+.picker span { opacity: .8; margin-right: 4px; }
+.picker button {
+  min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.3);
+  background: transparent; color: #fff; font-weight: 700;
+}
+.picker button.on { background: #fff; color: #111; }
+
+/* ---------- Capçalera ---------- */
+.top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 8px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: var(--head-weight); font-size: 22px; }
+.brand svg { color: var(--accent); }
+.icon-btn {
+  width: 48px; height: 48px; display: grid; place-items: center; border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, var(--card-top), var(--card)); border: var(--bw) solid var(--line); color: var(--muted);
+}
+body[data-tema="c"] .icon-btn { box-shadow: 3px 3px 0 var(--line); color: var(--ink); }
+
+.hello { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin: 14px 0 16px; }
+.hello p { margin: 6px 0 0; color: var(--muted); font-size: 17px; }
+
+/* ---------- Digitacions ---------- */
+.digits { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  min-height: 48px; padding: 0 16px; border-radius: 999px;
+  background: var(--chip-bg); border: var(--bw) solid var(--line); color: var(--ink);
+  font-weight: 800; font-size: 17px; letter-spacing: .02em; font-variant-numeric: tabular-nums;
+}
+body[data-tema="c"] .chip { box-shadow: 3px 3px 0 var(--line); }
+.chip.on { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
+body[data-tema="c"] .chip.on { border-color: var(--line); }
+.chip small { display: block; font-size: 11px; font-weight: 600; opacity: .75; letter-spacing: 0; margin-top: -3px; }
+
+/* ---------- Diapasó ---------- */
+.board-card { padding: 14px 12px 10px; }
+.board-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0 6px 8px; flex-wrap: wrap; }
+.seg { display: inline-flex; border: var(--bw) solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { min-height: 44px; padding: 0 18px; border: 0; background: transparent; font-weight: 700; color: var(--muted); }
+.seg button.on { background: var(--accent); color: var(--accent-ink); }
+.toggle { display: inline-flex; align-items: center; gap: 8px; font-weight: 650; color: var(--muted); min-height: 44px; background: none; border: 0; }
+.toggle i { width: 42px; height: 26px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; }
+.toggle i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.toggle.on i { background: var(--accent); }
+.toggle.on i::after { transform: translateX(16px); }
+body[data-tema="c"] .toggle i { border: 2px solid var(--line); }
+body[data-tema="c"] .toggle i::after { top: 1px; left: 1px; }
+
+.board-wrap { overflow-x: auto; }
+.board-wrap svg { display: block; }
+.vb .edge { fill: var(--board-edge); }
+.vb .wood { }
+.vb .slotline { stroke: var(--slot-line); stroke-width: 1.2; stroke-dasharray: 4 5; }
+.vb .tape { fill: var(--tape); }
+.vb .nut { fill: var(--nut); }
+.vb .string { stroke: var(--string); stroke-linecap: round; }
+.vb .slabel { font-family: var(--font-head); font-weight: var(--head-weight); font-size: 16px; fill: var(--ink); text-anchor: end; dominant-baseline: central; }
+.vb .fnum { font-weight: 800; font-size: 17px; fill: var(--fnum); text-anchor: middle; }
+.vb .fnum.on { fill: var(--fnum-on); }
+.vb .fnum.dash { font-weight: 400; opacity: .6; }
+.vb .bracket { stroke: var(--fnum); stroke-width: 1.2; fill: none; opacity: .55; }
+.vb .hit { fill: transparent; cursor: pointer; }
+@media (hover: hover) { .vb .hit:hover { fill: rgba(255,255,255,.07); } }
+.vb .dot { stroke: var(--dot-stroke); stroke-width: var(--dot-stroke-w); pointer-events: none; transform-box: fill-box; transform-origin: center; }
+.vb .dot.open { fill: var(--d-open); } .vb .dot.norm { fill: var(--d-norm); } .vb .dot.low1 { fill: var(--d-low1); }
+.vb .dot.low2 { fill: var(--d-low2); } .vb .dot.high3 { fill: var(--d-high3); }
+.vb .dot.ok { fill: var(--ok); }
+.vb .dot.err { fill: var(--card); stroke: var(--err); stroke-width: 3.5; stroke-dasharray: 5 3; }
+.vb .dot-label.err { fill: var(--err); }
+.vb .dot.sel { stroke: var(--ink); stroke-width: 3; }
+body[data-tema="b"] .vb .dot { filter: drop-shadow(0 0 6px rgba(255,255,255,.35)); }
+body[data-tema="b"] .vb .dot.sel { stroke: #fff; filter: drop-shadow(0 0 12px rgba(242,193,78,.9)); }
+.vb .dot-label { font-weight: 800; font-size: 13px; fill: var(--d-text); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+body[data-tema="a"] .vb .dot-label { font-family: var(--font-head); font-size: 14px; }
+.vb .pop { animation: pop .32s cubic-bezier(.3,1.6,.5,1); }
+.vb .shake { animation: shake .36s ease-in-out; }
+@keyframes pop { from { transform: scale(.55); } to { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@media (prefers-reduced-motion: reduce) { .vb .pop, .vb .shake { animation: none; } }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 10px 6px 2px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: var(--dot-stroke-w)px solid var(--dot-stroke); }
+
+/* ---------- Panells inferiors ---------- */
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.note-card { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; min-height: 200px; }
+.note-name { font-family: var(--font-head); font-weight: var(--head-weight); font-size: clamp(54px, 8vw, 76px); line-height: 1; color: var(--accent); }
+.note-name small { display: block; font-size: 22px; color: var(--muted); margin-top: 6px; }
+.note-where { font-weight: 700; margin-top: 10px; }
+.staff svg { width: 100%; max-width: 280px; height: auto; display: block; margin-left: auto; }
+.st .line { stroke: var(--staff-line); stroke-width: 1.2; }
+.st .ledger { stroke: var(--staff-ink); stroke-width: 1.3; }
+.st .clef { fill: var(--staff-line); }
+.st .ink { fill: var(--staff-ink); }
+.st .hole { fill: var(--staff-bg); }
+.st .acc-line { stroke: var(--staff-ink); }
+
+.quiz { display: grid; gap: 10px; align-content: start; }
+.quiz .ask { color: var(--muted); font-weight: 700; }
+.quiz .target { font-family: var(--font-head); font-weight: var(--head-weight); font-size: 44px; line-height: 1.05; }
+.quiz .target span { color: var(--accent); }
+.quiz .fb { min-height: 26px; font-weight: 750; }
+.quiz .fb.ok { color: var(--ok); } .quiz .fb.err { color: var(--err); }
+.dots5 { display: flex; gap: 8px; }
+.dots5 i { width: 16px; height: 16px; border-radius: 50%; background: var(--faint); opacity: .3; display: inline-block; }
+.dots5 i.ok, .dots5 i.err { opacity: 1; }
+.dots5 i.ok { background: var(--ok); } .dots5 i.err { background: var(--err); }
+.btn {
+  min-height: 52px; padding: 0 24px; border-radius: var(--radius-sm); font-weight: 800; font-size: 17px;
+  background: var(--accent); color: var(--accent-ink); border: var(--bw) solid var(--accent);
+}
+body[data-tema="c"] .btn { border-color: var(--line); box-shadow: 3px 3px 0 var(--line); }
+body[data-tema="b"] .btn { box-shadow: 0 8px 24px -8px rgba(255,122,89,.8); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); box-shadow: none; }
+
+.mods { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+.mod { text-align: left; display: grid; gap: 4px; align-content: start; min-height: 120px; }
+.mod b { font-family: var(--font-head); font-weight: var(--head-weight); font-size: 19px; }
+.mod span { color: var(--muted); font-size: 14px; }
+.mod em { font-style: normal; font-weight: 800; font-size: 13px; color: var(--accent); margin-top: auto; }
+.note { color: var(--faint); font-size: 13px; margin: 18px 4px 0; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 30;
+  background: var(--ink); color: var(--card); padding: 12px 18px; border-radius: 12px; font-weight: 650;
+}
+
+/* ---------- iPad vertical i pantalles petites ---------- */
+@media (max-width: 900px) {
+  .row2 { grid-template-columns: 1fr; }
+  .mods { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .note-card { grid-template-columns: 1fr; }
+  .mods { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body data-tema="a">
+
+<nav class="picker" aria-label="Tria una proposta de disseny">
+  <span>Proposta:</span>
+  <button data-tema="a">A · Fusta i paper</button>
+  <button data-tema="b">B · Escenari</button>
+  <button data-tema="c">C · Pop</button>
+</nav>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 3c-2.6 0-4 1.8-4 4 0 1.6 1 2.5 1 4s-3.5 2-3.5 6.5c0 4.5 3 8.5 6.5 8.5s6.5-4 6.5-8.5S18 12.5 18 11s1-2.4 1-4c0-2.2-1.4-4-4-4z"/>
+        <path d="M13 17.5h4M15 12v14"/>
+      </svg>
+      Violin Lab
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" aria-label="Estadístiques" data-mostra><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"/></svg></button>
+      <button class="icon-btn" aria-label="Configuració" data-mostra><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+    </div>
+  </header>
+
+  <section class="hello">
+    <div>
+      <h1>Què toquem avui?</h1>
+      <p>Tria una digitació i toca el diapasó per escoltar cada nota.</p>
+    </div>
+    <div class="digits" id="digits"></div>
+  </section>
+
+  <section class="card board-card">
+    <div class="board-head">
+      <div class="seg" role="tablist">
+        <button data-mode="explora" class="on">Explora</button>
+        <button data-mode="exercici">Exercici</button>
+      </div>
+      <button class="toggle on" id="tapes" aria-pressed="true"><i></i>Cintes</button>
+    </div>
+    <div class="board-wrap" id="board"></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <div class="row2">
+    <section class="card note-card" aria-live="polite">
+      <div>
+        <div class="note-name" id="noteName">La<small>A</small></div>
+        <div class="note-where" id="noteWhere">Corda La, a l'aire</div>
+      </div>
+      <div class="staff" id="staff"></div>
+    </section>
+
+    <section class="card quiz" id="quiz">
+      <div class="ask">Exercici: on poses el dit?</div>
+      <div class="target" id="qTarget">Prem <span>Exercici</span> per començar</div>
+      <div class="dots5" id="qDots"></div>
+      <div class="fb" id="qFb"></div>
+      <div><button class="btn" id="qBtn">Comença</button></div>
+    </section>
+  </div>
+
+  <section class="mods">
+    <button class="card mod" data-mostra><b>Diapasó → nota</b><span>Veus un punt i dius quina nota és.</span><em>Nou</em></button>
+    <button class="card mod" data-mostra><b>Nota → dit</b><span>Veus una nota i hi poses el dit.</span><em>Nou</em></button>
+    <button class="card mod" data-mostra><b>Partitura → dit</b><span>Llegeixes en clau de sol i toques.</span><em>Nou</em></button>
+    <button class="card mod" data-mostra><b>Digitacions</b><span>Reconeixes la digitació d'una escala.</span><em>Nou</em></button>
+  </section>
+
+  <p class="note">Mostra de disseny: el diapasó, el so, la partitura i el mini exercici funcionen; la resta de botons encara no.</p>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   Teoria: violí en afinació estàndard (G3 D4 A4 E5). No és transpositor.
+   ===================================================================== */
+const STRINGS = [ // de dalt a baix, com al llibre: Mi a dalt
+  { id: 'E', name: 'Mi', midi: 76 },
+  { id: 'A', name: 'La', midi: 69 },
+  { id: 'D', name: 'Re', midi: 62 },
+  { id: 'G', name: 'Sol', midi: 55 },
+];
+const PC_SHARP = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+const PC_FLAT  = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
+const LATIN = { C: 'Do', D: 'Re', E: 'Mi', F: 'Fa', G: 'Sol', A: 'La', B: 'Si' };
+const LETTERS = 'CDEFGAB';
+const pcOf = m => ((m % 12) + 12) % 12;
+const freq = m => 440 * Math.pow(2, (m - 69) / 12);
+
+// Casella (semitons des de la corda a l'aire) → dit, tipus de color i grafia
+const SLOTS = [
+  { finger: '0', type: 'open',  text: "a l'aire",   spelling: 'sharp' },
+  { finger: '1', type: 'low1',  text: 'dit 1 baix', spelling: 'flat' },
+  { finger: '1', type: 'norm',  text: 'dit 1',      spelling: 'sharp' },
+  { finger: '2', type: 'low2',  text: 'dit 2 baix', spelling: 'flat' },
+  { finger: '2', type: 'norm',  text: 'dit 2 alt',  spelling: 'sharp' },
+  { finger: '3', type: 'norm',  text: 'dit 3',      spelling: 'sharp' },
+  { finger: '3', type: 'high3', text: 'dit 3 alt',  spelling: 'sharp' },
+  { finger: '4', type: 'norm',  text: 'dit 4',      spelling: 'sharp' },
+];
+const TYPE_LABEL = { open: "Corda a l'aire", norm: 'Dit normal', low1: '1 baix', low2: '2 baix', high3: '3 alt' };
+// Digitacions de 1a posició, amb la notació del mètode (dits junts = mig to)
+const DIGITS = [
+  { id: '0-1-23-4', slots: [0, 2, 4, 5, 7] },
+  { id: '0-12-3-4', slots: [0, 2, 3, 5, 7] },
+  { id: '0-1223-4', slots: [0, 2, 3, 4, 5, 7] },
+  { id: '0-1-2-34', slots: [0, 2, 4, 6, 7] },
+  { id: '0-122334', slots: [0, 2, 3, 4, 5, 6, 7] },
+];
+
+function spell(midi, slot) {
+  const en = (SLOTS[slot].spelling === 'flat' ? PC_FLAT : PC_SHARP)[pcOf(midi)];
+  return { en, la: LATIN[en[0]] + en.slice(1), letter: en[0], acc: en.slice(1), oct: Math.floor(midi / 12) - 1 };
+}
+
+/* =====================================================================
+   So d'arc (síntesi): serra filtrada, cos del violí, vibrato i fregament
+   ===================================================================== */
+let ctx = null, voice = null;
+function playViolin(midi) {
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!ctx) ctx = new AC();
+  if (ctx.state === 'suspended') ctx.resume();
+  const f = freq(midi), t = ctx.currentTime + 0.01, dur = 1.4;
+  if (voice) voice.gain.setTargetAtTime(0, t, 0.03);
+  const out = ctx.createGain(); out.gain.value = 1; out.connect(ctx.destination);
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0.0001, t);
+  env.gain.exponentialRampToValueAtTime(0.28, t + 0.09);   // l'arc agafa la corda
+  env.gain.setTargetAtTime(0.22, t + 0.12, 0.2);
+  env.gain.setTargetAtTime(0.0001, t + dur - 0.25, 0.09);  // l'arc s'aixeca
+  const osc = ctx.createOscillator(); osc.type = 'sawtooth'; osc.frequency.value = f;
+  const lfo = ctx.createOscillator(); lfo.frequency.value = 5.6;
+  const depth = ctx.createGain(); depth.gain.setValueAtTime(0, t); depth.gain.linearRampToValueAtTime(0, t + 0.28);
+  depth.gain.linearRampToValueAtTime(f * 0.0045, t + 0.6);  // vibrato que arriba després de l'atac
+  lfo.connect(depth).connect(osc.frequency);
+  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 170;
+  const body1 = ctx.createBiquadFilter(); body1.type = 'peaking'; body1.frequency.value = 290; body1.Q.value = 1.2; body1.gain.value = 6;
+  const body2 = ctx.createBiquadFilter(); body2.type = 'peaking'; body2.frequency.value = 2800; body2.Q.value = 1.1; body2.gain.value = 5;
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 5200; lp.Q.value = 0.6;
+  osc.connect(hp).connect(body1).connect(body2).connect(lp).connect(env).connect(out);
+  // Soroll suau de l'arc
+  const n = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate), d = n.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const ns = ctx.createBufferSource(); ns.buffer = n;
+  const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 0.8;
+  const ng = ctx.createGain(); ng.gain.value = 0.018;
+  ns.connect(bp).connect(ng).connect(env);
+  for (const s of [osc, lfo, ns]) { s.start(t); s.stop(t + dur + 0.1); }
+  voice = out;
+}
+
+/* =====================================================================
+   Diapasó horitzontal (com al llibre: voluta a l'esquerra, Mi a dalt)
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+let digit = DIGITS[0], mode = 'explora', tapes = true, selected = { s: 'A', slot: 0 }, marks = [];
+
+function renderBoard() {
+  const host = $('#board');
+  const W = Math.max(host.clientWidth, 560);
+  const labelW = 52, topH = 44, gap = 60, padR = 10;
+  const openU = 0.85, n = 7;
+  const sw = (W - labelW - padR) / (n + openU);
+  const openW = sw * openU, nutX = labelW + openW;
+  const boardH = gap * STRINGS.length;
+  const H = topH + boardH + 12;
+  const cx = slot => (slot === 0 ? labelW + openW / 2 : nutX + (slot - 0.5) * sw);
+  const cellX = slot => (slot === 0 ? labelW : nutX + (slot - 1) * sw);
+  const cellW = slot => (slot === 0 ? openW : sw);
+  const rowY = i => topH + gap / 2 + i * gap;
+  const r = Math.min(sw, gap) * 0.36;
+
+  let svg = `<svg class="vb" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Diapasó del violí">
+    <defs>
+      <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:var(--board-2)"/><stop offset=".5" style="stop-color:var(--board-1)"/><stop offset="1" style="stop-color:var(--board-2)"/>
+      </linearGradient>
+      <linearGradient id="taper" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#000" stop-opacity=".25"/><stop offset=".25" stop-color="#000" stop-opacity="0"/>
+      </linearGradient>
+    </defs>`;
+  // Números de dit a dalt, amb claudàtors com al llibre ("–" on no hi va cap dit)
+  for (let slot = 0; slot <= n; slot++) {
+    const used = digit.slots.includes(slot), x0 = cellX(slot) + 4, x1 = cellX(slot) + cellW(slot) - 4;
+    svg += `<path class="bracket" d="M${x0},${topH - 6} V${topH - 12} H${x1} V${topH - 6}"/>`;
+    svg += `<text class="fnum ${used ? 'on' : 'dash'}" x="${cx(slot)}" y="${topH - 18}">${used ? SLOTS[slot].finger : '–'}</text>`;
+  }
+  // Fusta del diapasó
+  svg += `<rect class="edge" x="${labelW - 2}" y="${topH - 2}" width="${W - labelW - padR + 4}" height="${boardH + 4}" rx="10"/>`;
+  svg += `<rect x="${labelW}" y="${topH}" width="${W - labelW - padR}" height="${boardH}" rx="9" fill="url(#wood)"/>`;
+  svg += `<rect x="${labelW}" y="${topH}" width="${W - labelW - padR}" height="${boardH}" rx="9" fill="url(#taper)"/>`;
+  // Línies de casella (discontínues) i cintes de principiant
+  for (let slot = 1; slot <= n; slot++) {
+    const x = nutX + slot * sw;
+    if (slot < n) svg += `<line class="slotline" x1="${x}" y1="${topH + 4}" x2="${x}" y2="${topH + boardH - 4}"/>`;
+  }
+  if (tapes) for (const slot of [2, 4, 5]) svg += `<rect class="tape" x="${cx(slot) - 3}" y="${topH}" width="6" height="${boardH}" rx="2"/>`;
+  svg += `<rect class="nut" x="${nutX - 4}" y="${topH - 2}" width="8" height="${boardH + 4}" rx="3"/>`;
+  // Cordes (la de Sol més gruixuda)
+  const thick = { E: 1.2, A: 1.7, D: 2.2, G: 2.9 };
+  STRINGS.forEach((s, i) => {
+    svg += `<line class="string" x1="${labelW}" y1="${rowY(i)}" x2="${W - padR}" y2="${rowY(i)}" stroke-width="${thick[s.id]}"/>`;
+    svg += `<text class="slabel" x="${labelW - 10}" y="${rowY(i)}">${s.name}</text>`;
+  });
+  // Zones tàctils
+  STRINGS.forEach((s, i) => {
+    for (let slot = 0; slot <= n; slot++)
+      svg += `<rect class="hit" data-s="${s.id}" data-slot="${slot}" x="${cellX(slot)}" y="${rowY(i) - gap / 2}" width="${cellW(slot)}" height="${gap}" rx="8"/>`;
+  });
+  // Punts
+  const dots = mode === 'explora'
+    ? STRINGS.flatMap(s => digit.slots.map(slot => ({ s: s.id, slot, cls: SLOTS[slot].type })))
+    : marks;
+  for (const d of dots) {
+    const i = STRINGS.findIndex(x => x.id === d.s), st = STRINGS[i];
+    const x = cx(d.slot), y = rowY(i), nm = spell(st.midi + d.slot, d.slot).la;
+    const sel = mode === 'explora' && selected && selected.s === d.s && selected.slot === d.slot;
+    svg += `<circle class="dot ${d.cls}${sel ? ' sel' : ''} ${d.anim || ''}" cx="${x}" cy="${y}" r="${r}"/>`;
+    svg += `<text class="dot-label${d.cls === 'err' ? ' err' : ''}" x="${x}" y="${y}">${nm}</text>`;
+    d.anim = '';
+  }
+  svg += '</svg>';
+  host.innerHTML = svg;
+}
+
+function renderLegend() {
+  const types = [...new Set(digit.slots.map(s => SLOTS[s].type))];
+  $('#legend').innerHTML = types.map(t => `<span><i style="background:var(--d-${t})"></i>${TYPE_LABEL[t]}</span>`).join('');
+}
+
+/* =====================================================================
+   Pentagrama en clau de sol (SVG propi)
+   ===================================================================== */
+// Clau de sol en unitats d'espai entre línies; origen a la línia de Sol (2a línia)
+const G_CLEF = 'M0.35,0.62 C-0.45,0.55 -0.4,-0.6 0.3,-0.62 C1.05,-0.62 1.15,0.75 0.2,0.95 C-0.95,1.1 -1.35,-0.35 -0.55,-1.25 C0.05,-1.95 0.95,-2.55 0.9,-3.45 C0.85,-4.35 0.1,-4.4 0.02,-3.55 C-0.05,-2.6 0.3,0.2 0.55,2.05 C0.66,2.85 -0.05,3.05 -0.35,2.55';
+function renderStaff(midi, slot) {
+  const sp = 10, half = sp / 2, bottom = 30, topLine = 38; // E4 i F5
+  const w = spell(midi, slot), step = w.oct * 7 + LETTERS.indexOf(w.letter);
+  const top = 44, bot = 21, H = (top - bot) * half, W = 170;
+  const y = s => (top - s) * half, nx = 116;
+  let svg = `<svg class="st" viewBox="0 0 ${W} ${H}" role="img" aria-label="Nota en clau de sol">`;
+  for (let s = bottom; s <= topLine; s += 2) svg += `<line class="line" x1="4" x2="${W - 4}" y1="${y(s)}" y2="${y(s)}"/>`;
+  svg += `<g transform="translate(22 ${y(32)}) scale(${sp})"><path d="${G_CLEF}" fill="none" stroke="var(--staff-line)" stroke-width="0.2" stroke-linecap="round"/>
+    <circle class="clef" cx="-0.3" cy="2.4" r="0.28"/></g>`;
+  for (let s = bottom - 2; s >= step; s -= 2) svg += `<line class="ledger" x1="${nx - 12}" x2="${nx + 12}" y1="${y(s)}" y2="${y(s)}"/>`;
+  for (let s = topLine + 2; s <= step; s += 2) svg += `<line class="ledger" x1="${nx - 12}" x2="${nx + 12}" y1="${y(s)}" y2="${y(s)}"/>`;
+  const ny = y(step), ax = nx - 18;
+  if (w.acc === '♯') svg += `<g transform="translate(${ax} ${ny})"><line class="acc-line" x1="-1.8" y1="-8" x2="-1.8" y2="9" stroke-width="1.1"/><line class="acc-line" x1="1.8" y1="-9" x2="1.8" y2="8" stroke-width="1.1"/><path class="ink" d="M-4,-2.3 L4,-4.9 L4,-2.7 L-4,-0.1 Z"/><path class="ink" d="M-4,2.7 L4,0.1 L4,2.3 L-4,4.9 Z"/></g>`;
+  if (w.acc === '♭') svg += `<g transform="translate(${ax} ${ny})"><line class="acc-line" x1="-2.4" y1="-15" x2="-2.4" y2="3.4" stroke-width="1.3"/><path class="ink" d="M-2.4,3.4 C6,-0.6 5.6,-7.6 -2.4,-3 L-2.4,-1.2 C3.4,-4.6 3.2,-0.6 -2.4,1.9 Z"/></g>`;
+  // Rodona, com al llibre
+  svg += `<ellipse class="ink" cx="${nx}" cy="${ny}" rx="7" ry="4.8"/><ellipse class="hole" cx="${nx}" cy="${ny}" rx="3.6" ry="2.6" transform="rotate(-38 ${nx} ${ny})"/>`;
+  svg += '</svg>';
+  $('#staff').innerHTML = svg;
+}
+
+function showNote(sid, slot) {
+  const st = STRINGS.find(x => x.id === sid), midi = st.midi + slot, w = spell(midi, slot);
+  $('#noteName').innerHTML = `${w.la}<small>${w.en}${w.oct}</small>`;
+  $('#noteWhere').textContent = `Corda ${st.name}, ${SLOTS[slot].text}`;
+  renderStaff(midi, slot);
+}
+
+/* =====================================================================
+   Mini exercici: 5 preguntes amb la digitació triada
+   ===================================================================== */
+let q = null, qi = 0, qRes = [];
+function newQuestion() {
+  const s = STRINGS[Math.floor(Math.random() * 4)];
+  const slots = digit.slots.filter(x => x > 0);
+  const slot = slots[Math.floor(Math.random() * slots.length)];
+  q = { s: s.id, slot, midi: s.midi + slot, done: false };
+  marks = [];
+  const w = spell(q.midi, slot);
+  $('#qTarget').innerHTML = `Corda ${s.name}: <span>${w.la}</span>`;
+  $('#qFb').textContent = ''; $('#qFb').className = 'fb';
+  $('#qBtn').hidden = true;
+  renderBoard();
+}
+function renderQDots() { $('#qDots').innerHTML = Array.from({ length: 5 }, (_, i) => `<i class="${qRes[i] || ''}"></i>`).join(''); }
+function startQuiz() {
+  setMode('exercici'); qi = 0; qRes = []; renderQDots(); newQuestion();
+}
+function answer(sid, slot) {
+  if (!q || q.done) return;
+  q.done = true;
+  const st = STRINGS.find(x => x.id === sid), m = st.midi + slot;
+  const ok = sid === q.s && slot === q.slot;
+  marks = [{ s: sid, slot, cls: ok ? 'ok' : 'err', anim: ok ? 'pop' : 'shake' }];
+  if (!ok) marks.push({ s: q.s, slot: q.slot, cls: SLOTS[q.slot].type, anim: 'pop' });
+  playViolin(ok ? m : q.midi);
+  showNote(q.s, q.slot);
+  const fb = $('#qFb');
+  fb.className = 'fb ' + (ok ? 'ok' : 'err');
+  fb.textContent = ok ? `Molt bé! ${SLOTS[q.slot].text}.`
+    : m === q.midi ? `És la mateixa nota, però a una altra corda. Aquí va amb el ${SLOTS[q.slot].text}.`
+    : `Gairebé! Va amb el ${SLOTS[q.slot].text}.`;
+  qRes[qi] = ok ? 'ok' : 'err'; renderQDots(); qi++;
+  renderBoard();
+  const b = $('#qBtn'); b.hidden = false;
+  b.textContent = qi < 5 ? 'Següent' : 'Torna-hi';
+  if (qi >= 5) {
+    const n = qRes.filter(x => x === 'ok').length;
+    $('#qTarget').innerHTML = `<span>${n} de 5</span> ${n === 5 ? 'perfecte!' : n >= 3 ? 'molt bé!' : 'tornem-hi!'}`;
+  }
+}
+
+/* =====================================================================
+   Interfície
+   ===================================================================== */
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+  if (m === 'explora') { q = null; marks = []; $('#qTarget').innerHTML = 'Prem <span>Comença</span> per provar&#8209;ho'; $('#qFb').textContent = ''; $('#qBtn').hidden = false; $('#qBtn').textContent = 'Comença'; $('#qDots').innerHTML = ''; }
+  renderBoard();
+}
+function renderDigits() {
+  $('#digits').innerHTML = DIGITS.map(d => `<button class="chip ${d === digit ? 'on' : ''}" data-digit="${d.id}">${d.id}</button>`).join('');
+}
+function setTema(t) {
+  document.body.dataset.tema = t;
+  document.querySelectorAll('.picker [data-tema]').forEach(b => b.classList.toggle('on', b.dataset.tema === t));
+  try { localStorage.setItem('violinlab.proposta', t); } catch (e) {}
+  if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t);
+}
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('.picker [data-tema]');
+  if (t) { setTema(t.dataset.tema); return; }
+  const dg = e.target.closest('[data-digit]');
+  if (dg) { digit = DIGITS.find(d => d.id === dg.dataset.digit); renderDigits(); renderLegend(); if (mode === 'exercici') startQuiz(); else renderBoard(); return; }
+  const md = e.target.closest('[data-mode]');
+  if (md) { if (md.dataset.mode === 'exercici') startQuiz(); else setMode('explora'); return; }
+  const hit = e.target.closest('.vb .hit');
+  if (hit) {
+    const sid = hit.dataset.s, slot = +hit.dataset.slot;
+    if (mode === 'exercici') { answer(sid, slot); return; }
+    selected = { s: sid, slot };
+    playViolin(STRINGS.find(x => x.id === sid).midi + slot);
+    showNote(sid, slot); renderBoard(); return;
+  }
+  if (e.target.closest('#qBtn')) { if (mode !== 'exercici' || qi >= 5) startQuiz(); else newQuestion(); return; }
+  if (e.target.closest('#tapes')) { tapes = !tapes; const b = $('#tapes'); b.classList.toggle('on', tapes); b.setAttribute('aria-pressed', tapes); renderBoard(); return; }
+  if (e.target.closest('[data-mostra]')) {
+    const el = $('#toast'); el.textContent = 'Això és només una mostra de disseny.'; el.hidden = false;
+    clearTimeout(el._t); el._t = setTimeout(() => (el.hidden = true), 2200);
+  }
+});
+let rt = null;
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(renderBoard, 120); });
+
+let inicial = (location.hash || '').slice(1);
+if (!['a', 'b', 'c'].includes(inicial)) { try { inicial = localStorage.getItem('violinlab.proposta') || 'a'; } catch (e) { inicial = 'a'; } }
+setTema(['a', 'b', 'c'].includes(inicial) ? inicial : 'a');
+renderDigits(); renderLegend(); renderBoard(); showNote('A', 0); setMode('explora');
+</script>
+</body>
+</html>

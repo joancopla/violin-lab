@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Violin Lab</title>
+<style>
+/* =====================================================================
+   Tokens comuns
+   ===================================================================== */
+:root {
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- A. Fusta i paper: una llibreta de música ---------- */
+body[data-tema="a"] {
+  color-scheme: light;
+  --bg: #f4ecdd; --bg-2: #eadcc3; --ink: #1f2a44; --muted: #6d6556; --faint: #9a917f;
+  --card: #fffaf0; --card-top: #fffdf7; --line: #e2d4b8; --bw: 1px;
+  --accent: #a6532a; --accent-ink: #fff8ec; --accent-soft: rgba(166,83,42,.12);
+  --ok: #4f7d2b; --err: #b23a2e;
+  --font-head: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --head-weight: 700; --head-track: -.01em;
+  --radius: 14px; --radius-sm: 10px;
+  --shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 12px 26px -16px rgba(90,60,25,.45);
+  --board-1: #33281f; --board-2: #17120e; --board-edge: #0e0b08;
+  --string: #d8ccb6; --nut: #efe2c8; --tape: rgba(255,246,224,.9); --slot-line: rgba(255,240,215,.10);
+  --fnum: #6d6556; --fnum-on: #1f2a44;
+  --staff-line: #4a4538; --staff-ink: #1f2a44; --staff-bg: #fffaf0;
+  --d-open: #b23a2e; --d-norm: #5f8f2e; --d-low1: #d98aa6; --d-low2: #2f7fb8; --d-high3: #e08a1e; --d-text: #fffaf0;
+  --dot-stroke: rgba(0,0,0,.25); --dot-stroke-w: 1;
+  --chip-bg: #fffaf0; --chip-on: #1f2a44; --chip-on-ink: #fff8ec;
+}
+body[data-tema="a"] {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(255,255,255,.7), transparent 70%),
+    radial-gradient(800px 600px at 110% 110%, rgba(166,83,42,.10), transparent 70%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+}
+
+/* ---------- B. Escenari: un concert amb focus ---------- */
+body[data-tema="b"] {
+  color-scheme: dark;
+  --bg: #0b0818; --bg-2: #150f2b; --ink: #f5f1ff; --muted: #a99fcc; --faint: #6e6594;
+  --card: #1a1434; --card-top: #231b45; --line: #2f2658; --bw: 1px;
+  --accent: #ff7a59; --accent-ink: #1a0f0a; --accent-soft: rgba(255,122,89,.14);
+  --ok: #4fd1b5; --err: #ff6b6b;
+  --font-head: "Avenir Next", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --head-weight: 800; --head-track: -.02em;
+  --radius: 20px; --radius-sm: 14px;
+  --shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 20px 40px -18px rgba(0,0,0,.8);
+  --board-1: #1d1713; --board-2: #0b0908; --board-edge: #000;
+  --string: #d9deea; --nut: #efe3cb; --tape: rgba(242,193,78,.6); --slot-line: rgba(255,255,255,.06);
+  --fnum: #8a80b0; --fnum-on: #f2c14e;
+  --staff-line: #8b82b1; --staff-ink: #f5f1ff; --staff-bg: #1a1434;
+  --d-open: #ff5a5f; --d-norm: #6fdc8c; --d-low1: #ff9ecf; --d-low2: #5ab8ff; --d-high3: #ffb547; --d-text: #140f26;
+  --dot-stroke: rgba(255,255,255,.35); --dot-stroke-w: 1;
+  --chip-bg: #1a1434; --chip-on: #f2c14e; --chip-on-ink: #1a1206;
+}
+body[data-tema="b"] {
+  background:
+    radial-gradient(520px 420px at 50% -8%, rgba(242,193,78,.22), transparent 70%),
+    radial-gradient(600px 520px at 100% 30%, rgba(255,122,89,.10), transparent 70%),
+    radial-gradient(600px 520px at 0% 80%, rgba(79,209,181,.08), transparent 70%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+}
+
+/* ---------- C. Pop: viu, arrodonit i amb contorns ---------- */
+body[data-tema="c"] {
+  color-scheme: light;
+  --bg: #fff3e4; --bg-2: #ffe9d2; --ink: #1b1740; --muted: #57527d; --faint: #8b86ad;
+  --card: #ffffff; --card-top: #ffffff; --line: #1b1740; --bw: 2.5px;
+  --accent: #7c5cff; --accent-ink: #ffffff; --accent-soft: rgba(124,92,255,.14);
+  --ok: #17a34a; --err: #e5383b;
+  --font-head: "Arial Rounded MT Bold", "Nunito", "Varela Round", "Segoe UI", system-ui, sans-serif;
+  --head-weight: 800; --head-track: -.01em;
+  --radius: 22px; --radius-sm: 16px;
+  --shadow: 4px 4px 0 #1b1740;
+  --board-1: #2f2870; --board-2: #221c55; --board-edge: #1b1740;
+  --string: #f3f0ff; --nut: #ffd84d; --tape: rgba(255,216,77,.7); --slot-line: rgba(255,255,255,.12);
+  --fnum: #57527d; --fnum-on: #7c5cff;
+  --staff-line: #1b1740; --staff-ink: #1b1740; --staff-bg: #ffffff;
+  --d-open: #ff4d4d; --d-norm: #2ecc71; --d-low1: #ff8fc8; --d-low2: #3d9bff; --d-high3: #ffa62b; --d-text: #1b1740;
+  --dot-stroke: #1b1740; --dot-stroke-w: 2.5;
+  --chip-bg: #ffffff; --chip-on: #7c5cff; --chip-on-ink: #ffffff;
+}
+body[data-tema="c"] {
+  background:
+    radial-gradient(420px 420px at 8% 8%, rgba(124,92,255,.22), transparent 70%),
+    radial-gradient(460px 460px at 96% 92%, rgba(255,138,61,.25), transparent 70%),
+    radial-gradient(360px 360px at 92% 12%, rgba(46,204,113,.16), transparent 70%),
+    var(--bg);
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; font-family: var(--font-body); color: var(--ink);
+  background-attachment: fixed; line-height: 1.45;
+}
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px 48px; }
+h1, h2, h3 { font-family: var(--font-head); font-weight: var(--head-weight); letter-spacing: var(--head-track); margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 44px); line-height: 1.08; }
+h2 { font-size: 22px; line-height: 1.2; }
+h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--font-body); font-weight: 750; }
+.muted { color: var(--muted); }
+
+.card {
+  background: linear-gradient(180deg, var(--card-top), var(--card));
+  border: var(--bw) solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 18px;
+}
+.enter { animation: enter .25s ease-out; }
+@keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Capçalera ---------- */
+.top { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 8px; gap: 8px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: var(--head-weight); font-size: 22px; background: none; border: 0; padding: 4px 0; }
+.brand svg { color: var(--accent); }
+.top-actions { display: flex; gap: 8px; }
+.icon-btn {
+  width: 48px; height: 48px; display: grid; place-items: center; border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, var(--card-top), var(--card)); border: var(--bw) solid var(--line); color: var(--muted);
+}
+body[data-tema="c"] .icon-btn { box-shadow: 3px 3px 0 var(--line); color: var(--ink); }
+
+.hello { margin: 14px 0 16px; }
+.hello p { margin: 6px 0 0; color: var(--muted); font-size: 17px; }
+.now { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; font-weight: 700; color: var(--muted); }
+.now b { background: var(--accent-soft); color: var(--ink); border-radius: 999px; padding: 4px 12px; font-variant-numeric: tabular-nums; }
+.now button { background: none; border: 0; color: var(--accent); font-weight: 750; text-decoration: underline; text-underline-offset: 3px; min-height: 36px; }
+
+/* ---------- Xips, segments i interruptors ---------- */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  min-height: 48px; padding: 4px 16px; border-radius: 999px;
+  background: var(--chip-bg); border: var(--bw) solid var(--line); color: var(--ink);
+  font-weight: 800; font-size: 17px; letter-spacing: .02em; font-variant-numeric: tabular-nums;
+}
+body[data-tema="c"] .chip { box-shadow: 3px 3px 0 var(--line); }
+.chip.on { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
+body[data-tema="c"] .chip.on { border-color: var(--line); }
+.chip small { display: block; font-size: 11px; font-weight: 600; opacity: .75; letter-spacing: 0; margin-top: -3px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: var(--bw) solid var(--line); border-radius: 999px; overflow: hidden; background: var(--chip-bg); }
+.seg button { min-height: 46px; padding: 0 18px; border: 0; background: transparent; font-weight: 700; color: var(--muted); }
+.seg button.on { background: var(--accent); color: var(--accent-ink); }
+.toggle { display: inline-flex; align-items: center; gap: 10px; font-weight: 650; color: var(--ink); min-height: 46px; background: none; border: 0; padding: 0; }
+.toggle i { width: 46px; height: 28px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; flex: none; }
+.toggle i::after { content: ""; position: absolute; top: 4px; left: 4px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.toggle.on i { background: var(--accent); }
+.toggle.on i::after { transform: translateX(18px); }
+body[data-tema="a"] .toggle:not(.on) i { background: #cbbd9f; }
+body[data-tema="c"] .toggle i { border: 2px solid var(--line); }
+body[data-tema="c"] .toggle i::after { top: 2px; left: 2px; }
+
+/* ---------- Diapasó ---------- */
+.board-card { padding: 12px 10px 10px; }
+.board-wrap svg { display: block; touch-action: manipulation; }
+.vb .edge { fill: var(--board-edge); }
+.vb .slotline { stroke: var(--slot-line); stroke-width: 1.2; stroke-dasharray: 4 5; }
+.vb .tape { fill: var(--tape); }
+.vb .nut { fill: var(--nut); }
+.vb .string { stroke: var(--string); stroke-linecap: round; }
+.vb .string.vib { animation: vib .36s linear; }
+@keyframes vib { 0%,100% { transform: translateY(0); } 15% { transform: translateY(1.6px); } 30% { transform: translateY(-1.4px); } 45% { transform: translateY(1.1px); } 60% { transform: translateY(-.8px); } 75% { transform: translateY(.5px); } }
+.vb .off { fill: rgba(0,0,0,.42); pointer-events: none; }
+.vb .slabel { font-family: var(--font-head); font-weight: var(--head-weight); fill: var(--ink); text-anchor: end; dominant-baseline: central; }
+.vb .slabel.dim { fill: var(--faint); }
+.vb .fnum { font-weight: 800; font-size: 17px; fill: var(--fnum); text-anchor: middle; }
+.vb .fnum.on { fill: var(--fnum-on); }
+.vb .fnum.dash { font-weight: 400; opacity: .6; }
+.vb .bracket { stroke: var(--fnum); stroke-width: 1.2; fill: none; opacity: .55; }
+.vb .hit { fill: transparent; cursor: pointer; }
+@media (hover: hover) { .vb .hit:hover { fill: rgba(255,255,255,.07); } }
+.vb .dot { stroke: var(--dot-stroke); stroke-width: var(--dot-stroke-w); pointer-events: none; transform-box: fill-box; transform-origin: center; }
+.vb .open { fill: var(--d-open); } .vb .norm { fill: var(--d-norm); } .vb .low1 { fill: var(--d-low1); }
+.vb .low2 { fill: var(--d-low2); } .vb .high3 { fill: var(--d-high3); }
+.vb .dot.ok { fill: var(--ok); }
+.vb .dot.err { fill: var(--card); stroke: var(--err); stroke-width: 3.5; stroke-dasharray: 5 3; }
+.vb .dot-label.err { fill: var(--err); }
+.vb .dot.sel { stroke: var(--ink); stroke-width: 3; }
+.vb .dot.ghost { opacity: .35; }
+body[data-tema="b"] .vb .dot { filter: drop-shadow(0 0 6px rgba(255,255,255,.35)); }
+body[data-tema="b"] .vb .dot.sel { stroke: #fff; filter: drop-shadow(0 0 12px rgba(242,193,78,.9)); }
+.vb .dot-label { font-weight: 800; fill: var(--d-text); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+body[data-tema="a"] .vb .dot-label { font-family: var(--font-head); }
+.vb .pop { animation: pop .32s cubic-bezier(.3,1.6,.5,1); }
+.vb .shake { animation: shake .36s ease-in-out; }
+@keyframes pop { from { transform: scale(.55); } to { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+/* Punt de la pregunta: llisca a la posició nova */
+.vb .qmark { transition: transform .3s cubic-bezier(.3,.8,.3,1); pointer-events: none; }
+.vb .qmark circle { fill: var(--accent); stroke: #fff; stroke-width: 3; }
+body[data-tema="c"] .vb .qmark circle { stroke: var(--line); }
+.vb .qmark text { fill: var(--accent-ink); font-weight: 900; text-anchor: middle; dominant-baseline: central; }
+.vb .qmark.ok circle { fill: var(--ok); }
+.vb .qmark.err circle { fill: var(--err); }
+.vb .qmark.ok text, .vb .qmark.err text { fill: #fff; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 10px 6px 2px; font-size: 14px; color: var(--muted); align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.caption { margin: 8px 6px 0; min-height: 24px; font-weight: 700; }
+
+/* ---------- Inici: mòduls ---------- */
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.qstaff { background: var(--staff-bg); border: var(--bw) solid var(--line); border-radius: var(--radius-sm); padding: 6px 10px; max-width: 300px; }
+.qstaff svg { display: block; width: 100%; height: auto; }
+.mod { text-align: left; display: grid; gap: 4px; align-content: start; min-height: 120px; }
+.mod b { font-family: var(--font-head); font-weight: var(--head-weight); font-size: 20px; }
+.mod span { color: var(--muted); font-size: 15px; }
+.mod em { font-style: normal; font-weight: 800; font-size: 13px; color: var(--accent); margin-top: auto; }
+
+/* ---------- Barra d'exercici ---------- */
+.bar { display: flex; align-items: center; gap: 12px; margin: 10px 0 12px; }
+.bar h2 { flex: 1; font-size: 20px; }
+.count { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--muted); }
+.progress { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; margin: -4px 0 12px; }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+
+/* ---------- Pregunta ---------- */
+.panel { margin-top: 14px; display: grid; gap: 12px; }
+.ask { color: var(--muted); font-weight: 700; font-size: 17px; }
+.target { font-family: var(--font-head); font-weight: var(--head-weight); font-size: clamp(34px, 7vw, 48px); line-height: 1.05; }
+.target span { color: var(--accent); }
+.answers { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.ans {
+  min-height: 56px; border-radius: var(--radius-sm); border: var(--bw) solid var(--line);
+  background: var(--chip-bg); font-weight: 800; font-size: 19px;
+}
+body[data-tema="c"] .ans { box-shadow: 3px 3px 0 var(--line); }
+.ans.ok { background: var(--ok); color: #fff; border-color: var(--ok); }
+.ans.err { background: transparent; color: var(--err); border-color: var(--err); border-style: dashed; }
+.ans:disabled { cursor: default; }
+.fb-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 52px; }
+.fb { font-weight: 750; font-size: 17px; flex: 1; min-width: 200px; }
+.fb.ok { color: var(--ok); } .fb.err { color: var(--err); }
+
+.btn {
+  min-height: 52px; padding: 0 24px; border-radius: var(--radius-sm); font-weight: 800; font-size: 17px;
+  background: var(--accent); color: var(--accent-ink); border: var(--bw) solid var(--accent);
+}
+body[data-tema="c"] .btn { border-color: var(--line); box-shadow: 3px 3px 0 var(--line); }
+body[data-tema="b"] .btn { box-shadow: 0 8px 24px -8px rgba(255,122,89,.8); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); box-shadow: none; }
+.btn.small { min-height: 44px; padding: 0 16px; font-size: 15px; }
+
+/* ---------- Toca lliure: fitxa de la nota ---------- */
+.note-card { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; min-height: 190px; margin-top: 14px; }
+.note-name { font-family: var(--font-head); font-weight: var(--head-weight); font-size: clamp(54px, 8vw, 76px); line-height: 1; color: var(--accent); }
+.note-name small { display: block; font-size: 22px; color: var(--muted); margin-top: 6px; }
+.note-where { font-weight: 700; margin-top: 10px; }
+.note-hz { color: var(--muted); font-variant-numeric: tabular-nums; }
+.staff svg { width: 100%; max-width: 280px; height: auto; display: block; margin-left: auto; }
+.st .line { stroke: var(--staff-line); stroke-width: 1.2; }
+.st .ledger { stroke: var(--staff-ink); stroke-width: 1.3; }
+.st .clef { fill: var(--staff-line); }
+.st .ink { fill: var(--staff-ink); }
+.st .hole { fill: var(--staff-bg); }
+.st .acc-line { stroke: var(--staff-ink); }
+
+/* ---------- Resum ---------- */
+.summary { text-align: center; display: grid; gap: 14px; justify-items: center; padding: 28px 18px; margin-top: 12px; }
+.big { font-family: var(--font-head); font-weight: var(--head-weight); font-size: clamp(54px, 12vw, 84px); line-height: 1; color: var(--accent); }
+.big small { font-size: .4em; color: var(--muted); }
+.fails { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.fails span { border: var(--bw) solid var(--line); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 15px; }
+.row-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+/* ---------- Configuració ---------- */
+.settings { display: grid; gap: 22px; margin-top: 12px; }
+.settings section { display: grid; gap: 10px; }
+.settings p { margin: 0; color: var(--muted); font-size: 14px; }
+.danger { color: var(--err); border-color: var(--err); }
+
+/* ---------- Diàleg ---------- */
+dialog {
+  border: var(--bw) solid var(--line); border-radius: var(--radius); background: var(--card); color: var(--ink);
+  padding: 22px; max-width: 360px; width: calc(100% - 32px); box-shadow: var(--shadow);
+}
+dialog::backdrop { background: rgba(0,0,0,.45); }
+dialog p { margin: 0 0 18px; font-size: 17px; font-weight: 650; }
+dialog .row-btns { justify-content: flex-end; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 30;
+  background: var(--ink); color: var(--card); padding: 12px 18px; border-radius: 12px; font-weight: 650;
+}
+
+@media (max-width: 760px) {
+  .mods { grid-template-columns: 1fr; }
+  .mod { min-height: 0; }
+}
+@media (max-width: 560px) {
+  .note-card { grid-template-columns: 1fr; }
+  .card { padding: 14px; }
+  .board-card { padding: 10px 6px 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter, .vb .pop, .vb .shake, .vb .string.vib { animation: none; }
+  .vb .qmark, .progress i, .toggle i, .toggle i::after { transition: none; }
+}
+</style>
+</head>
+<body data-tema="a" data-screen="home">
+
+<div class="wrap">
+  <header class="top">
+    <button class="brand" id="brand" aria-label="Inici">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 3c-2.6 0-4 1.8-4 4 0 1.6 1 2.5 1 4s-3.5 2-3.5 6.5c0 4.5 3 8.5 6.5 8.5s6.5-4 6.5-8.5S18 12.5 18 11s1-2.4 1-4c0-2.2-1.4-4-4-4z"/>
+        <path d="M13 17.5h4M15 12v14"/>
+      </svg>
+      Violin Lab
+    </button>
+    <div class="top-actions">
+      <button class="icon-btn" id="pellBtn" aria-label="Canvia la pell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.5-1.9-.4-1.2.4-2.6 1.8-2.6H18a3 3 0 0 0 3-3c0-5.5-4-10.5-9-10.5z"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="10.5" cy="7" r="1.3" fill="currentColor"/><circle cx="15.5" cy="7.5" r="1.3" fill="currentColor"/></svg></button>
+      <button class="icon-btn" id="cfgBtn" aria-label="Configuració"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+    </div>
+  </header>
+
+  <!-- Inici: salutació -->
+  <section class="hello" data-on="home">
+    <h1>Què toquem avui?</h1>
+    <p>Toca el diapasó per escoltar cada nota, o tria un exercici.</p>
+    <div class="now">Ara: <span id="nowDigits"></span><button data-go="settings">Canvia</button></div>
+  </section>
+
+  <!-- Exercici i toca lliure: barra superior -->
+  <div class="bar" data-on="play free">
+    <button class="btn ghost small" id="exitBtn">← Surt</button>
+    <h2 id="barTitle"></h2>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="progress" data-on="play" id="progressWrap"><i id="progress"></i></div>
+
+  <!-- El diapasó és l'element compartit entre pantalles -->
+  <section class="card board-card" data-on="home play free">
+    <div class="board-wrap" id="board"></div>
+    <div class="legend" id="legend" data-on="home free"></div>
+    <div class="caption" id="caption" data-on="home" aria-live="polite"></div>
+  </section>
+
+  <!-- Inici: mòduls -->
+  <section class="mods" data-on="home">
+    <button class="card mod" data-start="m1"><b>Diapasó → nota</b><span>Veus un punt al diapasó i dius quina nota és.</span><em>Exercici</em></button>
+    <button class="card mod" data-start="m2"><b>Nota → diapasó</b><span>Veus una nota i una corda, i hi poses el dit.</span><em>Exercici</em></button>
+    <button class="card mod" data-start="m3"><b>Partitura → nota</b><span>Llegeixes una nota en clau de sol i dius el nom.</span><em>Exercici</em></button>
+    <button class="card mod" data-start="m4"><b>Partitura → diapasó</b><span>Llegeixes una nota i la toques a l'altura exacta.</span><em>Exercici</em></button>
+    <button class="card mod" data-go="free"><b>Toca lliure</b><span>Toques on vulguis i veus la nota, el dit i la partitura.</span><em>Eina</em></button>
+  </section>
+
+  <!-- Exercici: pregunta -->
+  <section class="card panel" data-on="play" aria-live="polite">
+    <div class="ask" id="ask"></div>
+    <div class="target" id="target"></div>
+    <div class="answers" id="answers"></div>
+    <div class="fb-row">
+      <div class="fb" id="fb"></div>
+      <button class="btn" id="nextBtn" hidden>Següent</button>
+    </div>
+  </section>
+
+  <!-- Toca lliure: fitxa de la nota -->
+  <section class="card note-card" data-on="free" aria-live="polite">
+    <div>
+      <div class="note-name" id="noteName"></div>
+      <div class="note-where" id="noteWhere"></div>
+      <div class="note-hz" id="noteHz"></div>
+    </div>
+    <div class="staff" id="staff"></div>
+  </section>
+
+  <!-- Resum de la sessió -->
+  <section class="card summary" data-on="summary">
+    <h2 id="sumTitle"></h2>
+    <div class="big" id="sumScore"></div>
+    <div class="muted" id="sumTime"></div>
+    <div id="sumFailsWrap"><p class="muted" style="margin:0 0 8px">Per repassar:</p><div class="fails" id="sumFails"></div></div>
+    <div class="row-btns">
+      <button class="btn" id="againBtn">Torna-hi</button>
+      <button class="btn ghost" data-go="home">Inici</button>
+    </div>
+  </section>
+
+  <!-- Configuració -->
+  <section class="settings" data-on="settings">
+    <div class="bar" style="margin-bottom:0">
+      <h2>Configuració</h2>
+      <button class="btn small" data-go="home">Fet</button>
+    </div>
+    <section class="card">
+      <h3>On sóc del llibre</h3>
+      <p>Digitacions que entren als exercicis. Se'n poden triar diverses.</p>
+      <div class="chips" id="cfgDigits"></div>
+    </section>
+    <section class="card">
+      <h3>Cordes</h3>
+      <div class="chips" id="cfgStrings"></div>
+    </section>
+    <section class="card">
+      <h3>Notació</h3>
+      <div><div class="seg" id="cfgNota"></div></div>
+    </section>
+    <section class="card">
+      <h3>Mida de la sessió</h3>
+      <div><div class="seg" id="cfgSize"></div></div>
+    </section>
+    <section class="card">
+      <h3>Pell</h3>
+      <div class="chips" id="cfgPell"></div>
+    </section>
+    <section class="card">
+      <h3>Opcions</h3>
+      <div><button class="toggle" id="cfgSo"><i></i>So</button></div>
+      <div><button class="toggle" id="cfgTapes"><i></i>Cintes de principiant al diapasó</button></div>
+    </section>
+    <section class="card">
+      <h3>Progrés</h3>
+      <p>Esborra els pesos dels errors, les estadístiques i l'historial. La configuració es manté.</p>
+      <div><button class="btn ghost small danger" id="resetBtn">Esborra el progrés</button></div>
+    </section>
+  </section>
+</div>
+
+<dialog id="dlg">
+  <p id="dlgText"></p>
+  <div class="row-btns">
+    <button class="btn ghost small" id="dlgNo">Cancel·la</button>
+    <button class="btn small" id="dlgYes">D'acord</button>
+  </div>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   Teoria: violí en afinació estàndard (G3 D4 A4 E5). No és transpositor.
+   ===================================================================== */
+const STRINGS = [ // de dalt a baix, com al llibre: Mi a dalt
+  { id: 'E', name: 'Mi', en: 'E', midi: 76 },
+  { id: 'A', name: 'La', en: 'A', midi: 69 },
+  { id: 'D', name: 'Re', en: 'D', midi: 62 },
+  { id: 'G', name: 'Sol', en: 'G', midi: 55 },
+];
+const PC_SHARP = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+const PC_FLAT  = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
+const LATIN = { C: 'Do', D: 'Re', E: 'Mi', F: 'Fa', G: 'Sol', A: 'La', B: 'Si' };
+const LETTERS = 'CDEFGAB';
+const pcOf = m => ((m % 12) + 12) % 12;
+const freq = m => 440 * Math.pow(2, (m - 69) / 12);
+
+// Casella (semitons des de la corda a l'aire) → dit, tipus de color i grafia
+const SLOTS = [
+  { finger: '0', type: 'open',  text: "a l'aire",   short: '0',   spelling: 'sharp' },
+  { finger: '1', type: 'low1',  text: 'dit 1 baix', short: '1b',  spelling: 'flat' },
+  { finger: '1', type: 'norm',  text: 'dit 1',      short: '1',   spelling: 'sharp' },
+  { finger: '2', type: 'low2',  text: 'dit 2 baix', short: '2b',  spelling: 'flat' },
+  { finger: '2', type: 'norm',  text: 'dit 2 alt',  short: '2',   spelling: 'sharp' },
+  { finger: '3', type: 'norm',  text: 'dit 3',      short: '3',   spelling: 'sharp' },
+  { finger: '3', type: 'high3', text: 'dit 3 alt',  short: '3a',  spelling: 'sharp' },
+  { finger: '4', type: 'norm',  text: 'dit 4',      short: '4',   spelling: 'sharp' },
+];
+const TYPE_LABEL = { open: "Corda a l'aire", norm: 'Dit normal', low1: '1 baix', low2: '2 baix', high3: '3 alt' };
+// Digitacions de 1a posició, amb la notació del mètode (dits junts = mig to)
+const DIGITS = [
+  { id: '0-1-23-4', book: 'Stradivari 1', slots: [0, 2, 4, 5, 7] },
+  { id: '0-12-3-4', book: 'Stradivari 2', slots: [0, 2, 3, 5, 7] },
+  { id: '0-1-2-34', book: 'Stradivari 2', slots: [0, 2, 4, 6, 7] },
+  { id: '0-1223-4', book: 'Stradivari 2', slots: [0, 2, 3, 4, 5, 7] },
+  { id: '0-122334', book: 'Stradivari 2', slots: [0, 2, 3, 4, 5, 6, 7] },
+  { id: '1a', label: '1a posició completa', book: 'Stradivari 3', slots: [0, 1, 2, 3, 4, 5, 6, 7] },
+];
+const PELLS = { a: 'Fusta i paper', b: 'Escenari', c: 'Pop' };
+const MODS = { m1: 'Diapasó → nota', m2: 'Nota → diapasó', m3: 'Partitura → nota', m4: 'Partitura → diapasó' };
+
+function spell(midi, slot) {
+  const en = (SLOTS[slot].spelling === 'flat' ? PC_FLAT : PC_SHARP)[pcOf(midi)];
+  return { en, la: LATIN[en[0]] + en.slice(1), letter: en[0], acc: en.slice(1), oct: Math.floor(midi / 12) - 1 };
+}
+const strById = id => STRINGS.find(s => s.id === id);
+const pcOfName = en => (PC_SHARP.includes(en) ? PC_SHARP.indexOf(en) : PC_FLAT.indexOf(en));
+
+/* =====================================================================
+   Persistència (localStorage, prefix violinlab.)
+   ===================================================================== */
+const store = {
+  get(k, def) { try { const v = localStorage.getItem('violinlab.' + k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } },
+  set(k, v) { try { localStorage.setItem('violinlab.' + k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem('violinlab.' + k); } catch (e) {} },
+};
+const DEFAULT_CFG = { digits: ['0-12-3-4', '0-1-2-34'], strings: ['E', 'A', 'D', 'G'], nota: 'la', so: true, size: 20, tapes: true };
+const cfg = Object.assign({}, DEFAULT_CFG, store.get('config', {}));
+cfg.digits = cfg.digits.filter(id => DIGITS.some(d => d.id === id));
+if (!cfg.digits.length) cfg.digits = DEFAULT_CFG.digits.slice();
+cfg.strings = cfg.strings.filter(id => strById(id));
+if (!cfg.strings.length) cfg.strings = DEFAULT_CFG.strings.slice();
+const saveCfg = () => store.set('config', cfg);
+
+let weights = store.get('weights', {});           // "m1|A:3" → pes
+let stats = store.get('stats', { mods: {}, pos: {} });
+let history = store.get('history', []);
+
+const activeSlots = () => [...new Set(cfg.digits.flatMap(id => DIGITS.find(d => d.id === id).slots))].sort((a, b) => a - b);
+const activeStrings = () => STRINGS.filter(s => cfg.strings.includes(s.id));
+const completa = () => cfg.digits.includes('1a');
+const digitLabel = id => { const d = DIGITS.find(x => x.id === id); return d.label || d.id; };
+// Nom en la notació demanada ('la' o 'en')
+const nm = (w, n) => (n === 'en' ? w.en : w.la);
+
+/* =====================================================================
+   So d'arc (síntesi): serra filtrada, cos del violí, vibrato i fregament
+   ===================================================================== */
+let ctx = null, voice = null;
+function audio() {
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+  if (!ctx) ctx = new AC();
+  if (ctx.state === 'suspended') ctx.resume();
+  return ctx;
+}
+document.addEventListener('pointerdown', () => { if (cfg.so) audio(); }, { once: true });
+
+function play(sid, slot) {
+  vibrate(sid);
+  if (!cfg.so) return;
+  const c = audio(); if (!c) return;
+  const midi = strById(sid).midi + slot;
+  const f = freq(midi), t = c.currentTime + 0.01, dur = 1.4;
+  if (voice) voice.gain.setTargetAtTime(0, t, 0.03);
+  const out = c.createGain(); out.gain.value = 1; out.connect(c.destination);
+  const env = c.createGain();
+  env.gain.setValueAtTime(0.0001, t);
+  env.gain.exponentialRampToValueAtTime(0.28, t + 0.09);   // l'arc agafa la corda
+  env.gain.setTargetAtTime(0.22, t + 0.12, 0.2);
+  env.gain.setTargetAtTime(0.0001, t + dur - 0.25, 0.09);  // l'arc s'aixeca
+  const osc = c.createOscillator(); osc.type = 'sawtooth'; osc.frequency.value = f;
+  const lfo = c.createOscillator(); lfo.frequency.value = 5.6;
+  const depth = c.createGain(); depth.gain.setValueAtTime(0, t); depth.gain.linearRampToValueAtTime(0, t + 0.28);
+  depth.gain.linearRampToValueAtTime(f * 0.0045, t + 0.6);  // vibrato que arriba després de l'atac
+  lfo.connect(depth).connect(osc.frequency);
+  const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 170;
+  const body1 = c.createBiquadFilter(); body1.type = 'peaking'; body1.frequency.value = 290; body1.Q.value = 1.2; body1.gain.value = 6;
+  const body2 = c.createBiquadFilter(); body2.type = 'peaking'; body2.frequency.value = 2800; body2.Q.value = 1.1; body2.gain.value = 5;
+  const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 5200; lp.Q.value = 0.6;
+  osc.connect(hp).connect(body1).connect(body2).connect(lp).connect(env).connect(out);
+  // Soroll suau de l'arc
+  const n = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate), d = n.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const ns = c.createBufferSource(); ns.buffer = n;
+  const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 0.8;
+  const ng = c.createGain(); ng.gain.value = 0.018;
+  ns.connect(bp).connect(ng).connect(env);
+  for (const s of [osc, lfo, ns]) { s.start(t); s.stop(t + dur + 0.1); }
+  voice = out;
+}
+function vibrate(sid) {
+  const el = document.getElementById('str-' + sid); if (!el) return;
+  el.classList.remove('vib'); void el.getBoundingClientRect(); el.classList.add('vib');
+}
+
+/* =====================================================================
+   Diapasó horitzontal (com al llibre: voluta a l'esquerra, Mi a dalt)
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const NS = 7; // caselles amb dit: de +1 a +7
+// Estat del que es dibuixa: punts, punt de pregunta i si s'apaguen les caselles inactives
+const board = { dots: [], q: null, qState: '', qText: '?', dim: false };
+let G = null;
+
+function renderBoard() {
+  const host = $('#board');
+  if (!host.offsetParent) return;
+  const W = Math.max(host.clientWidth, 300);
+  const narrow = W < 520;
+  const labelW = narrow ? 40 : 52, topH = 42, padR = 8, openU = 0.85;
+  const sw = (W - labelW - padR) / (NS + openU);
+  const gap = Math.max(46, Math.min(62, sw * 1.15));
+  const openW = sw * openU, nutX = labelW + openW;
+  const boardH = gap * STRINGS.length, H = topH + boardH + 8;
+  const cx = slot => (slot === 0 ? labelW + openW / 2 : nutX + (slot - 0.5) * sw);
+  const cellX = slot => (slot === 0 ? labelW : nutX + (slot - 1) * sw);
+  const cellW = slot => (slot === 0 ? openW : sw);
+  const rowY = i => topH + gap / 2 + i * gap;
+  const r = Math.min(sw * 0.43, gap * 0.4);
+  const fs = Math.max(10, Math.min(14, r * 0.68));
+  G = { cx, rowY, r, fs };
+  const act = activeSlots(), actS = cfg.strings;
+
+  let svg = `<svg class="vb" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Diapasó del violí">
+    <defs>
+      <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:var(--board-2)"/><stop offset=".5" style="stop-color:var(--board-1)"/><stop offset="1" style="stop-color:var(--board-2)"/>
+      </linearGradient>
+      <linearGradient id="taper" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#000" stop-opacity=".25"/><stop offset=".25" stop-color="#000" stop-opacity="0"/>
+      </linearGradient>
+    </defs>`;
+  // Números de dit a dalt, amb claudàtors com al llibre ("–" on no hi va cap dit)
+  for (let slot = 0; slot <= NS; slot++) {
+    const used = act.includes(slot), x0 = cellX(slot) + 4, x1 = cellX(slot) + cellW(slot) - 4;
+    svg += `<path class="bracket" d="M${x0},${topH - 6} V${topH - 12} H${x1} V${topH - 6}"/>`;
+    svg += `<text class="fnum ${used ? 'on' : 'dash'}" x="${cx(slot)}" y="${topH - 18}">${used ? SLOTS[slot].finger : '–'}</text>`;
+  }
+  // Fusta del diapasó
+  svg += `<rect class="edge" x="${labelW - 2}" y="${topH - 2}" width="${W - labelW - padR + 4}" height="${boardH + 4}" rx="10"/>`;
+  svg += `<rect x="${labelW}" y="${topH}" width="${W - labelW - padR}" height="${boardH}" rx="9" fill="url(#wood)"/>`;
+  svg += `<rect x="${labelW}" y="${topH}" width="${W - labelW - padR}" height="${boardH}" rx="9" fill="url(#taper)"/>`;
+  for (let slot = 1; slot < NS; slot++) {
+    const x = nutX + slot * sw;
+    svg += `<line class="slotline" x1="${x}" y1="${topH + 4}" x2="${x}" y2="${topH + boardH - 4}"/>`;
+  }
+  if (cfg.tapes) for (const slot of [2, 4, 5]) svg += `<rect class="tape" x="${cx(slot) - 3}" y="${topH}" width="6" height="${boardH}" rx="2"/>`;
+  svg += `<rect class="nut" x="${nutX - 4}" y="${topH - 2}" width="8" height="${boardH + 4}" rx="3"/>`;
+  // Cordes (la de Sol més gruixuda)
+  const thick = { E: 1.2, A: 1.7, D: 2.2, G: 2.9 };
+  STRINGS.forEach((s, i) => {
+    svg += `<line class="string" id="str-${s.id}" x1="${labelW}" y1="${rowY(i)}" x2="${W - padR}" y2="${rowY(i)}" stroke-width="${thick[s.id]}"/>`;
+    svg += `<text class="slabel${actS.includes(s.id) ? '' : ' dim'}" x="${labelW - 8}" y="${rowY(i)}" font-size="${narrow ? 14 : 16}">${cfg.nota === 'en' ? s.en : s.name}</text>`;
+  });
+  // Caselles apagades (fora de la digitació o corda desactivada)
+  if (board.dim) STRINGS.forEach((s, i) => {
+    for (let slot = 0; slot <= NS; slot++)
+      if (!act.includes(slot) || !actS.includes(s.id))
+        svg += `<rect class="off" x="${cellX(slot) + 1}" y="${rowY(i) - gap / 2 + 1}" width="${cellW(slot) - 2}" height="${gap - 2}" rx="6"/>`;
+  });
+  // Zones tàctils
+  STRINGS.forEach((s, i) => {
+    for (let slot = 0; slot <= NS; slot++)
+      svg += `<rect class="hit" data-s="${s.id}" data-slot="${slot}" x="${cellX(slot)}" y="${rowY(i) - gap / 2}" width="${cellW(slot)}" height="${gap}" rx="8"/>`;
+  });
+  svg += `<g id="dots"></g>`;
+  svg += `<g id="qmark" class="qmark" hidden><circle r="${r * 1.08}"/><text font-size="${fs * 1.25}">?</text></g>`;
+  svg += '</svg>';
+  host.innerHTML = svg;
+  drawDots(); placeQ();
+}
+
+function drawDots() {
+  const g = document.getElementById('dots'); if (!g || !G) return;
+  let h = '';
+  for (const d of board.dots) {
+    const i = STRINGS.findIndex(x => x.id === d.s), st = STRINGS[i];
+    const x = G.cx(d.slot), y = G.rowY(i), w = spell(st.midi + d.slot, d.slot);
+    h += `<circle class="dot ${d.cls} ${d.anim || ''}" cx="${x}" cy="${y}" r="${G.r}"/>`;
+    const n = d.nota || (cfg.nota === 'en' ? 'en' : 'la');
+    h += `<text class="dot-label${d.cls.includes('err') ? ' err' : ''}" x="${x}" y="${y}" font-size="${G.fs}">${nm(w, n)}</text>`;
+    d.anim = '';
+  }
+  g.innerHTML = h;
+}
+
+function placeQ(animate) {
+  const el = document.getElementById('qmark'); if (!el || !G) return;
+  if (!board.q) { el.setAttribute('hidden', ''); return; }
+  const i = STRINGS.findIndex(x => x.id === board.q.s);
+  if (!animate) el.style.transition = 'none';
+  el.style.transform = `translate(${G.cx(board.q.slot)}px, ${G.rowY(i)}px)`;
+  el.removeAttribute('hidden');
+  el.setAttribute('class', 'qmark ' + board.qState);
+  el.querySelector('text').textContent = board.qText;
+  el.querySelector('text').setAttribute('font-size', board.qText === '?' ? G.fs * 1.25 : G.fs);
+  if (!animate) { void el.getBoundingClientRect(); el.style.transition = ''; }
+}
+
+// Punts de la digitació activa (inici i toca lliure)
+function explorerDots(sel) {
+  const act = activeSlots();
+  const dots = activeStrings().flatMap(s => act.map(slot => ({ s: s.id, slot, cls: 'dot ' + SLOTS[slot].type })));
+  if (sel) {
+    const d = dots.find(x => x.s === sel.s && x.slot === sel.slot);
+    if (d) { d.cls += ' sel'; d.anim = 'pop'; }
+    else dots.push({ s: sel.s, slot: sel.slot, cls: SLOTS[sel.slot].type + ' sel', anim: 'pop' });
+  }
+  return dots;
+}
+
+function renderLegend() {
+  const types = [...new Set(activeSlots().map(s => SLOTS[s].type))];
+  $('#legend').innerHTML = types.map(t => `<span><i style="background:var(--d-${t})"></i>${TYPE_LABEL[t]}</span>`).join('');
+}
+
+/* =====================================================================
+   Pentagrama en clau de sol (SVG propi)
+   ===================================================================== */
+// Clau de sol en unitats d'espai entre línies; origen a la línia de Sol (2a línia)
+const G_CLEF = 'M0.35,0.62 C-0.45,0.55 -0.4,-0.6 0.3,-0.62 C1.05,-0.62 1.15,0.75 0.2,0.95 C-0.95,1.1 -1.35,-0.35 -0.55,-1.25 C0.05,-1.95 0.95,-2.55 0.9,-3.45 C0.85,-4.35 0.1,-4.4 0.02,-3.55 C-0.05,-2.6 0.3,0.2 0.55,2.05 C0.66,2.85 -0.05,3.05 -0.35,2.55';
+function staffSvg(midi, slot) {
+  const sp = 10, half = sp / 2, bottom = 30, topLine = 38; // E4 i F5 (passos diatònics: octava*7 + lletra)
+  const w = spell(midi, slot), step = w.oct * 7 + LETTERS.indexOf(w.letter);
+  const top = 44, bot = 21, H = (top - bot) * half, W = 170;
+  const y = s => (top - s) * half, nx = 116;
+  let svg = `<svg class="st" viewBox="0 0 ${W} ${H}" role="img" aria-label="${w.la}${w.oct} en clau de sol">`;
+  for (let s = bottom; s <= topLine; s += 2) svg += `<line class="line" x1="4" x2="${W - 4}" y1="${y(s)}" y2="${y(s)}"/>`;
+  svg += `<g transform="translate(22 ${y(32)}) scale(${sp})"><path d="${G_CLEF}" fill="none" stroke="var(--staff-line)" stroke-width="0.2" stroke-linecap="round"/>
+    <circle class="clef" cx="-0.3" cy="2.4" r="0.28"/></g>`;
+  for (let s = bottom - 2; s >= step; s -= 2) svg += `<line class="ledger" x1="${nx - 12}" x2="${nx + 12}" y1="${y(s)}" y2="${y(s)}"/>`;
+  for (let s = topLine + 2; s <= step; s += 2) svg += `<line class="ledger" x1="${nx - 12}" x2="${nx + 12}" y1="${y(s)}" y2="${y(s)}"/>`;
+  const ny = y(step), ax = nx - 18;
+  if (w.acc === '♯') svg += `<g transform="translate(${ax} ${ny})"><line class="acc-line" x1="-1.8" y1="-8" x2="-1.8" y2="9" stroke-width="1.1"/><line class="acc-line" x1="1.8" y1="-9" x2="1.8" y2="8" stroke-width="1.1"/><path class="ink" d="M-4,-2.3 L4,-4.9 L4,-2.7 L-4,-0.1 Z"/><path class="ink" d="M-4,2.7 L4,0.1 L4,2.3 L-4,4.9 Z"/></g>`;
+  if (w.acc === '♭') svg += `<g transform="translate(${ax} ${ny})"><line class="acc-line" x1="-2.4" y1="-15" x2="-2.4" y2="3.4" stroke-width="1.3"/><path class="ink" d="M-2.4,3.4 C6,-0.6 5.6,-7.6 -2.4,-3 L-2.4,-1.2 C3.4,-4.6 3.2,-0.6 -2.4,1.9 Z"/></g>`;
+  svg += `<ellipse class="ink" cx="${nx}" cy="${ny}" rx="7" ry="4.8"/><ellipse class="hole" cx="${nx}" cy="${ny}" rx="3.6" ry="2.6" transform="rotate(-38 ${nx} ${ny})"/>`;
+  return svg + '</svg>';
+}
+
+/* =====================================================================
+   Pantalles
+   ===================================================================== */
+let screen = 'home', freeSel = null, homeSel = null;
+function show(sc) {
+  const prev = screen; screen = sc;
+  document.body.dataset.screen = sc;
+  document.querySelectorAll('[data-on]').forEach(el => {
+    const on = el.dataset.on.split(' ').includes(sc);
+    const was = !el.hidden;
+    el.hidden = !on;
+    // El diapasó es queda quiet (element compartit); la resta entra suau
+    if (on && !was && !el.classList.contains('board-card')) { el.classList.remove('enter'); void el.offsetWidth; el.classList.add('enter'); }
+  });
+  if (sc === 'home') { board.dim = false; board.q = null; board.dots = explorerDots(homeSel); renderHome(); }
+  if (sc === 'free') { board.dim = false; board.q = null; board.dots = explorerDots(freeSel); $('#barTitle').textContent = 'Toca lliure'; $('#count').textContent = ''; renderLegend(); renderFreeCard(); }
+  if (sc === 'settings') renderSettings();
+  if (['home', 'play', 'free'].includes(sc)) renderBoard();
+  if (prev !== sc) window.scrollTo({ top: 0 });
+}
+function renderHome() {
+  $('#nowDigits').innerHTML = cfg.digits.map(id => `<b>${digitLabel(id)}</b>`).join(' ');
+  renderLegend();
+}
+function caption(sid, slot) {
+  const st = strById(sid), w = spell(st.midi + slot, slot), n = cfg.nota === 'en' ? 'en' : 'la';
+  const other = cfg.nota === 'mix' ? ` · ${w.en}` : '';
+  return `Corda ${n === 'en' ? st.en : st.name}, ${SLOTS[slot].text}: ${nm(w, n)}${other}`;
+}
+function renderFreeCard() {
+  if (!freeSel) {
+    $('#noteName').innerHTML = '<small>Toca el diapasó</small>';
+    $('#noteWhere').textContent = ''; $('#noteHz').textContent = ''; $('#staff').innerHTML = '';
+    return;
+  }
+  const st = strById(freeSel.s), midi = st.midi + freeSel.slot, w = spell(midi, freeSel.slot);
+  const main = cfg.nota === 'en' ? w.en : w.la, other = cfg.nota === 'en' ? w.la : w.en;
+  $('#noteName').innerHTML = `${main}<small>${other}</small>`;
+  $('#noteWhere').textContent = `Corda ${cfg.nota === 'en' ? st.en : st.name}, ${SLOTS[freeSel.slot].text}`;
+  $('#noteHz').textContent = `${w.la}${w.oct} (${w.en}${w.oct}) · ${freq(midi).toFixed(1).replace('.', ',')} Hz`;
+  $('#staff').innerHTML = staffSvg(midi, freeSel.slot);
+}
+
+/* =====================================================================
+   Sessió d'exercici amb pesos
+   ===================================================================== */
+let S = null, nextTimer = null;
+const W_MIN = 0.3, W_MAX = 8, FAST_MS = { m1: 2500, m2: 3500, m3: 3000, m4: 4000 };
+const BY_PITCH = mod => mod === 'm3' || mod === 'm4'; // mòduls de partitura: la pregunta és una altura, no una posició
+
+// Ítems que poden sortir. Als mòduls de partitura, una sola entrada per altura
+// (Re4 = Re a l'aire = Sol amb el 4t dit); es queda la posició més baixa.
+function pool(mod) {
+  const act = activeSlots();
+  const items = activeStrings().flatMap(s => act.map(slot => ({ s: s.id, slot, midi: s.midi + slot, key: `${s.id}:${slot}` })))
+    .sort((a, b) => a.slot - b.slot);
+  if (!BY_PITCH(mod)) return items;
+  const seen = new Map();
+  for (const it of items) if (!seen.has(it.midi)) {
+    const w = spell(it.midi, it.slot);
+    seen.set(it.midi, Object.assign(it, { key: `n:${w.en}${w.oct}` }));
+  }
+  return [...seen.values()];
+}
+function pick(mod, last) {
+  let items = pool(mod);
+  if (items.length > 1) items = items.filter(it => it.key !== last);
+  const ws = items.map(it => weights[mod + '|' + it.key] ?? 1);
+  let r = Math.random() * ws.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < items.length; i++) { r -= ws[i]; if (r <= 0) return items[i]; }
+  return items[items.length - 1];
+}
+// Totes les posicions de 1a posició que donen aquesta altura exacta
+const positionsOf = midi => STRINGS.flatMap(s => (midi - s.midi >= 0 && midi - s.midi <= NS ? [{ s: s.id, slot: midi - s.midi }] : []));
+const sName = (sid, nota) => (nota === 'en' ? strById(sid).en : strById(sid).name);
+const fingerPhrase = slot => (slot === 0 ? "a l'aire" : `amb el ${SLOTS[slot].text}`);
+const whereText = (p, nota) => `a la corda ${sName(p.s, nota)} ${fingerPhrase(p.slot)}`;
+
+function startSession(mod) {
+  clearTimeout(nextTimer);
+  S = { mod, n: 0, ok: 0, ms: 0, total: cfg.size, last: null, fails: [], q: null, ended: false };
+  $('#barTitle').textContent = MODS[mod];
+  board.dim = true; board.dots = []; board.q = null;
+  show('play');
+  nextQ();
+}
+
+function nextQ() {
+  clearTimeout(nextTimer);
+  if (S.total && S.n >= S.total) return finish();
+  const it = pick(S.mod, S.last);
+  const nota = cfg.nota === 'mix' ? (Math.random() < 0.5 ? 'la' : 'en') : cfg.nota;
+  S.q = Object.assign({}, it, { w: spell(it.midi, it.slot), nota, t0: performance.now(), done: false });
+  S.last = it.key;
+  $('#count').textContent = S.total ? `${S.n + 1}/${S.total}` : `${S.n + 1}`;
+  $('#progressWrap').hidden = !S.total;
+  $('#progress').style.width = S.total ? `${(S.n / S.total) * 100}%` : '0';
+  $('#fb').textContent = ''; $('#fb').className = 'fb'; $('#nextBtn').hidden = true;
+  const sname = sName(it.s, nota);
+  board.dots = [];
+  if (S.mod === 'm1') {
+    $('#ask').textContent = 'Quina nota és?';
+    $('#target').innerHTML = `Corda ${sname}, <span>${SLOTS[it.slot].text}</span>`;
+    const animate = !!board.q;
+    board.q = { s: it.s, slot: it.slot }; board.qState = ''; board.qText = '?';
+    drawDots(); placeQ(animate);
+    renderAnswers(nota);
+    return;
+  }
+  board.q = null; drawDots(); placeQ();
+  if (S.mod === 'm2') {
+    $('#ask').textContent = 'On poses el dit?';
+    $('#target').innerHTML = `Corda ${sname}: <span>${nm(S.q.w, nota)}</span>`;
+    $('#answers').innerHTML = '';
+  } else {
+    $('#ask').textContent = S.mod === 'm3' ? 'Quina nota és?' : 'On la toques? Ha de sonar a aquesta altura.';
+    $('#target').innerHTML = `<div class="qstaff">${staffSvg(it.midi, it.slot)}</div>`;
+    if (S.mod === 'm3') renderAnswers(nota); else $('#answers').innerHTML = '';
+  }
+}
+
+// Botons de resposta: els noms que poden sortir amb la configuració, en ordre cromàtic des de Do
+function renderAnswers(nota) {
+  const seen = new Map();
+  for (const it of pool()) { const w = spell(it.midi, it.slot); if (!seen.has(w.en)) seen.set(w.en, w); }
+  const list = [...seen.values()].sort((a, b) => pcOfName(a.en) - pcOfName(b.en) || (a.acc === '♭') - (b.acc === '♭'));
+  $('#answers').innerHTML = list.map(w => `<button class="ans" data-ans="${w.en}">${nm(w, nota)}</button>`).join('');
+}
+
+// Mòduls 1 i 3: resposta amb el nom
+function answerName(en) {
+  const q = S.q; if (!q || q.done) return;
+  const ok = en === q.w.en || (completa() && pcOfName(en) === pcOf(q.midi));
+  document.querySelectorAll('#answers .ans').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.ans === q.w.en) b.classList.add('ok');
+    else if (b.dataset.ans === en) b.classList.add('err');
+  });
+  if (S.mod === 'm1') { board.qState = ok ? 'ok' : 'err'; board.qText = nm(q.w, q.nota); placeQ(false); }
+  else { // m3: es mostra on es toca aquesta nota
+    board.dots = positionsOf(q.midi).map(p => ({ s: p.s, slot: p.slot, cls: ok ? 'ok' : SLOTS[p.slot].type, anim: 'pop', nota: q.nota }));
+    drawDots();
+  }
+  judge(ok, ok ? '' : `És ${nm(q.w, q.nota)}.`);
+}
+
+// Mòduls 2 i 4: resposta tocant el diapasó
+function answerPos(sid, slot) {
+  const q = S.q; if (!q || q.done) return;
+  const m = strById(sid).midi + slot;
+  // Mòdul 2: la pregunta diu la corda i només compta aquella posició. Mòdul 4: compta l'altura exacta.
+  const ok = S.mod === 'm2' ? sid === q.s && slot === q.slot : m === q.midi;
+  const right = S.mod === 'm2' ? [{ s: q.s, slot: q.slot }] : positionsOf(q.midi);
+  board.dots = [{ s: sid, slot, cls: ok ? 'ok' : 'err', anim: ok ? 'pop' : 'shake', nota: q.nota }];
+  if (!ok) for (const p of right) board.dots.push({ s: p.s, slot: p.slot, cls: SLOTS[p.slot].type, anim: 'pop', nota: q.nota });
+  drawDots();
+  let msg = '';
+  if (!ok && S.mod === 'm2') msg = m === q.midi ? `És la mateixa nota, però a una altra corda. Aquí va ${fingerPhrase(q.slot)}.`
+    : sid === q.s ? `Va ${fingerPhrase(q.slot)}.`
+    : `És ${whereText(q, q.nota)}.`;
+  if (!ok && S.mod === 'm4') msg = pcOf(m) === pcOf(q.midi)
+    ? `És la mateixa nota, però ha de sonar una octava més ${q.midi > m ? 'aguda' : 'greu'}.`
+    : `És ${right.map(p => whereText(p, q.nota)).join(' o ')}.`;
+  judge(ok, msg, ok ? { s: sid, slot } : null);
+}
+
+function judge(ok, msg, at) {
+  const q = S.q; q.done = true;
+  const ms = Math.min(performance.now() - q.t0, 20000);
+  const wk = S.mod + '|' + q.key, w0 = weights[wk] ?? 1;
+  weights[wk] = ok ? Math.max(W_MIN, w0 * (ms < FAST_MS[S.mod] ? 0.6 : 0.9)) : Math.min(W_MAX, w0 + 2);
+  const sm = stats.mods[S.mod] || (stats.mods[S.mod] = { n: 0, ok: 0, ms: 0 });
+  sm.n++; sm.ms += ms; if (ok) sm.ok++;
+  const sp = stats.pos[wk] || (stats.pos[wk] = { n: 0, err: 0 });
+  sp.n++; if (!ok) sp.err++;
+  store.set('weights', weights); store.set('stats', stats);
+  S.n++; S.ms += ms; if (ok) S.ok++;
+  else if (!S.fails.some(f => f.key === q.key)) S.fails.push({ key: q.key, s: q.s, slot: q.slot });
+  $('#progress').style.width = S.total ? `${(S.n / S.total) * 100}%` : '0';
+  play(at ? at.s : q.s, at ? at.slot : q.slot);
+  const fb = $('#fb');
+  fb.className = 'fb ' + (ok ? 'ok' : 'err');
+  fb.textContent = ok ? 'Molt bé!' : msg;
+  if (ok) nextTimer = setTimeout(nextQ, 750);
+  else {
+    const b = $('#nextBtn'); b.hidden = false;
+    b.textContent = S.total && S.n >= S.total ? 'Acaba' : 'Següent';
+    b.focus({ preventScroll: true });
+  }
+}
+
+function saveHistory() {
+  if (!S || S.ended || !S.n) return;
+  S.ended = true;
+  history.push({ d: new Date().toISOString(), mod: S.mod, n: S.n, ok: S.ok, ms: Math.round(S.ms / S.n) });
+  if (history.length > 300) history = history.slice(-300);
+  store.set('history', history);
+}
+
+function finish() {
+  clearTimeout(nextTimer);
+  saveHistory();
+  $('#sumTitle').textContent = MODS[S.mod];
+  $('#sumScore').innerHTML = `${S.ok}<small> de ${S.n}</small>`;
+  $('#sumTime').textContent = S.n ? `Temps mitjà: ${(S.ms / S.n / 1000).toFixed(1).replace('.', ',')} s` : '';
+  const n = cfg.nota === 'en' ? 'en' : 'la';
+  $('#sumFails').innerHTML = S.fails.map(f => {
+    const w = spell(strById(f.s).midi + f.slot, f.slot);
+    return `<span>${sName(f.s, n)} · ${nm(w, n)} (${SLOTS[f.slot].short})</span>`;
+  }).join('');
+  $('#sumFailsWrap').hidden = !S.fails.length;
+  board.q = null;
+  show('summary');
+}
+
+function exitSession() {
+  if (screen === 'free') { show('home'); return; }
+  if (!S || S.ended) { show('home'); return; }
+  if (!S.n) { clearTimeout(nextTimer); S = null; board.q = null; show('home'); return; }
+  ask('Vols sortir de l\'exercici? Es desarà el que has fet.', 'Surt', () => {
+    clearTimeout(nextTimer);
+    if (S.total) { saveHistory(); board.q = null; show('home'); }
+    else finish(); // en mode lliure, sortir és acabar
+  });
+}
+
+/* =====================================================================
+   Diàleg de confirmació (sense alert/confirm del navegador)
+   ===================================================================== */
+let dlgYes = null;
+function ask(text, yesLabel, onYes) {
+  $('#dlgText').textContent = text; $('#dlgYes').textContent = yesLabel; dlgYes = onYes;
+  const d = $('#dlg'); if (d.showModal) d.showModal(); else if (confirm(text)) onYes();
+}
+$('#dlgNo').addEventListener('click', () => $('#dlg').close());
+$('#dlgYes').addEventListener('click', () => { $('#dlg').close(); if (dlgYes) dlgYes(); });
+
+function toast(t) {
+  const el = $('#toast'); el.textContent = t; el.hidden = false;
+  clearTimeout(el._t); el._t = setTimeout(() => (el.hidden = true), 1800);
+}
+
+/* =====================================================================
+   Configuració
+   ===================================================================== */
+function renderSettings() {
+  $('#cfgDigits').innerHTML = DIGITS.map(d => `<button class="chip ${cfg.digits.includes(d.id) ? 'on' : ''}" data-cfg-digit="${d.id}" aria-pressed="${cfg.digits.includes(d.id)}">${d.label || d.id}<small>${d.book}</small></button>`).join('');
+  $('#cfgStrings').innerHTML = STRINGS.map(s => `<button class="chip ${cfg.strings.includes(s.id) ? 'on' : ''}" data-cfg-string="${s.id}" aria-pressed="${cfg.strings.includes(s.id)}">${s.name}<small>${s.en}</small></button>`).join('');
+  const seg = (id, opts, cur, attr) => { $(id).innerHTML = opts.map(([v, l]) => `<button class="${String(v) === String(cur) ? 'on' : ''}" ${attr}="${v}">${l}</button>`).join(''); };
+  seg('#cfgNota', [['la', 'Llatina'], ['en', 'Anglesa'], ['mix', 'Barrejada']], cfg.nota, 'data-cfg-nota');
+  seg('#cfgSize', [[10, '10'], [20, '20'], [50, '50'], [0, 'Lliure']], cfg.size, 'data-cfg-size');
+  $('#cfgPell').innerHTML = Object.entries(PELLS).map(([k, v]) => `<button class="chip ${k === document.body.dataset.tema ? 'on' : ''}" data-cfg-pell="${k}" aria-pressed="${k === document.body.dataset.tema}">${v}<small>${k.toUpperCase()}</small></button>`).join('');
+  for (const [id, on] of [['#cfgSo', cfg.so], ['#cfgTapes', cfg.tapes]]) { $(id).classList.toggle('on', on); $(id).setAttribute('aria-pressed', on); }
+}
+function toggleIn(arr, v) { const i = arr.indexOf(v); if (i >= 0) { if (arr.length > 1) arr.splice(i, 1); else return false; } else arr.push(v); return true; }
+
+function setTema(t) {
+  document.body.dataset.tema = t;
+  try { localStorage.setItem('violinlab.proposta', t); } catch (e) {}
+}
+
+/* =====================================================================
+   Esdeveniments
+   ===================================================================== */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const hit = t.closest('.vb .hit');
+  if (hit) {
+    const sid = hit.dataset.s, slot = +hit.dataset.slot;
+    if (screen === 'play') { if (S && (S.mod === 'm2' || S.mod === 'm4')) answerPos(sid, slot); return; }
+    play(sid, slot);
+    if (screen === 'free') { freeSel = { s: sid, slot }; board.dots = explorerDots(freeSel); drawDots(); renderFreeCard(); }
+    else if (screen === 'home') { homeSel = { s: sid, slot }; board.dots = explorerDots(homeSel); drawDots(); $('#caption').textContent = caption(sid, slot); }
+    return;
+  }
+  const ans = t.closest('[data-ans]'); if (ans) { answerName(ans.dataset.ans); return; }
+  const st = t.closest('[data-start]'); if (st) { startSession(st.dataset.start); return; }
+  const go = t.closest('[data-go]'); if (go) { show(go.dataset.go); return; }
+  if (t.closest('#nextBtn')) { nextQ(); return; }
+  if (t.closest('#againBtn')) { startSession(S.mod); return; }
+  if (t.closest('#exitBtn')) { exitSession(); return; }
+  if (t.closest('#brand')) { if (screen === 'play') exitSession(); else show('home'); return; }
+  if (t.closest('#cfgBtn')) { if (screen === 'play') exitSession(); else show('settings'); return; }
+  if (t.closest('#pellBtn')) {
+    const ks = Object.keys(PELLS), n = ks[(ks.indexOf(document.body.dataset.tema) + 1) % ks.length];
+    setTema(n); toast(`Pell: ${PELLS[n]}`); if (screen === 'settings') renderSettings(); return;
+  }
+  // Configuració
+  const cd = t.closest('[data-cfg-digit]');
+  if (cd) { if (!toggleIn(cfg.digits, cd.dataset.cfgDigit)) toast('Cal almenys una digitació'); saveCfg(); renderSettings(); return; }
+  const cs = t.closest('[data-cfg-string]');
+  if (cs) { if (!toggleIn(cfg.strings, cs.dataset.cfgString)) toast('Cal almenys una corda'); saveCfg(); renderSettings(); return; }
+  const cn = t.closest('[data-cfg-nota]'); if (cn) { cfg.nota = cn.dataset.cfgNota; saveCfg(); renderSettings(); return; }
+  const cz = t.closest('[data-cfg-size]'); if (cz) { cfg.size = +cz.dataset.cfgSize; saveCfg(); renderSettings(); return; }
+  const cp = t.closest('[data-cfg-pell]'); if (cp) { setTema(cp.dataset.cfgPell); renderSettings(); return; }
+  if (t.closest('#cfgSo')) { cfg.so = !cfg.so; saveCfg(); renderSettings(); if (cfg.so) audio(); return; }
+  if (t.closest('#cfgTapes')) { cfg.tapes = !cfg.tapes; saveCfg(); renderSettings(); return; }
+  if (t.closest('#resetBtn')) {
+    ask('Segur que vols esborrar tot el progrés? No es pot desfer.', 'Esborra', () => {
+      weights = {}; stats = { mods: {}, pos: {} }; history = [];
+      store.del('weights'); store.del('stats'); store.del('history');
+      toast('Progrés esborrat');
+    });
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if ($('#dlg').open) return;
+  if (screen === 'play') {
+    if (e.key === 'Escape') { e.preventDefault(); exitSession(); }
+    else if ((e.key === 'Enter' || e.key === ' ') && S && S.q && S.q.done && !$('#nextBtn').hidden) { e.preventDefault(); nextQ(); }
+  } else if (e.key === 'Escape' && screen !== 'home') show('home');
+});
+
+let rt = null;
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(renderBoard, 120); });
+
+let tema = 'a';
+try { tema = localStorage.getItem('violinlab.proposta') || 'a'; } catch (e) {}
+setTema(PELLS[tema] ? tema : 'a');
+show('home');
+</script>
+</body>
+</html>
